@@ -1,0 +1,21 @@
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/oop?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+    username: ${dbuser:admiаs}
+    password: ${dbpassword:rootpassword}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  servlet:
+    multipart:
+      max-file-size: 50MB
+app:
+  upload:
+    path: ${UPLOAD_PATH:?Can`t find upload path}
+  auth:
+    secret: ${JWT_SECRET:Secret1234}
+    token_expiration: 864000000
+server:
+  port: 10000
