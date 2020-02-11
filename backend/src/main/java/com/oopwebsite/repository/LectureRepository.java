@@ -1,7 +1,10 @@
 package com.oopwebsite.repository;
 
 import com.oopwebsite.entity.Lecture;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface LectureRepository extends CrudRepository<Lecture,Integer> {
+@Repository
+public interface LectureRepository extends MongoRepository<Lecture,Integer> {
 }

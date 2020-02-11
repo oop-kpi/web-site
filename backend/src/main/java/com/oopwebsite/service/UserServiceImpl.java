@@ -8,7 +8,6 @@ import com.oopwebsite.entity.Role;
 import com.oopwebsite.entity.User;
 import com.oopwebsite.repository.UserRepository;
 import com.oopwebsite.security.jwt.JwtTokenProvider;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,13 +18,21 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     private ModelMapper modelMapper;
     private PasswordEncoder passwordEncoder;
     private JwtTokenProvider tokenProvider;
     private AuthenticationManager authenticationManager;
+
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
+        this.authenticationManager = authenticationManager;
+    }
+
     @Override
     public String login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -46,7 +53,7 @@ public class UserServiceImpl implements UserService{
 
     private User mapToDao(SignUpRequest registerRequest){
         User user = modelMapper.map(registerRequest, User.class);
-        user.setGroupName(Group.valueOf(registerRequest.getGroup()));
+        user.setGroup(Group.valueOf(registerRequest.getGroup()));
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRoles(Collections.singletonList(Role.ROLE_USER));
         return user;
