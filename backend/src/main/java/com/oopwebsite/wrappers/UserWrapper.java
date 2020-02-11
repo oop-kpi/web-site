@@ -1,23 +1,20 @@
 package com.oopwebsite.wrappers;
 
-import com.oopwebsite.entity.Role;
+
 import com.oopwebsite.entity.User;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
-@Data
+
 public class UserWrapper implements UserDetails {
 
-    private int id;
+    private String id;
     private String login;
     private String password;
     private String email;
     private String name;
-    public UserWrapper(int id, String name, String login, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserWrapper(String id, String name, String login, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.login = login;
@@ -26,16 +23,13 @@ public class UserWrapper implements UserDetails {
         this.roles = authorities;
     }
     public static UserWrapper create(User user){
-        List<GrantedAuthority> authorities = Collections.
-                singletonList(Role.ROLE_USER);
-
         return new UserWrapper(
                 user.getId(),
                 user.getName(),
                 user.getLogin(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
+                user.getRoles()
         );
     }
 
@@ -79,8 +73,47 @@ public class UserWrapper implements UserDetails {
         return true;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public String getLogin() {
+        return login;
+    }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Collection<? extends GrantedAuthority> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<? extends GrantedAuthority> roles) {
+        this.roles = roles;
+    }
 }
