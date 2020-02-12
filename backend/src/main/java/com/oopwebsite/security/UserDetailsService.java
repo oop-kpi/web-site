@@ -1,5 +1,6 @@
 package com.oopwebsite.security;
 
+import com.oopwebsite.controller.exceptions.IllegalAccessException;
 import com.oopwebsite.entity.User;
 import com.oopwebsite.repository.UserRepository;
 import com.oopwebsite.wrappers.UserWrapper;
@@ -18,7 +19,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Transactional
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userRepository.findByLogin(s)
-                .orElseThrow(()->new BadCredentialsException("No such user!"));
+                .orElseThrow(()->new IllegalAccessException("Invalid credentials!"));
         return UserWrapper.create(user);
     }
 
