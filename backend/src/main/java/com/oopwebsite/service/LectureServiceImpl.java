@@ -22,7 +22,7 @@ public class LectureServiceImpl implements LectureService {
 
 
     @Override
-    public void save(LectureUploadRequest request, User user) {
+    public void save(LectureUploadRequest request) {
         Lecture lecture = new Lecture();
         lecture.setName(request.getName());
         lecture.setPath(FileUtility.saveFileToDir(request.getPresentation(),fileUploadingPath));

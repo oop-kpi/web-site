@@ -31,7 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 private UserDetailsService userDetailsService;
 @Autowired
 private TokenAuthenticationFilter jwtToken;
-
+private static final String[] AUTH_WHITELIST = {
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
@@ -50,6 +55,7 @@ private TokenAuthenticationFilter jwtToken;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http. cors().and().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
                       and()
@@ -61,7 +67,7 @@ private TokenAuthenticationFilter jwtToken;
         http.exceptionHandling()
                    .authenticationEntryPoint(new RestAuthEndpoint());
                        http.authorizeRequests().
-                           antMatchers("/auth/**").
+                           antMatchers("/api/auth/**").
                                permitAll().antMatchers("/",
                                                              "/error",
                                                             "/favicon.ico",
