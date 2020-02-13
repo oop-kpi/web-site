@@ -1,6 +1,5 @@
 package com.oopwebsite.dto;
 
-import com.oopwebsite.entity.Group;
 
 public class SignUpRequest {
     private String login;

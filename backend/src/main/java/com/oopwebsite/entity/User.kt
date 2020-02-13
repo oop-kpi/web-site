@@ -10,17 +10,18 @@ data class User(@JsonView(View.FULL_INFORMATION::class)
                 @JsonView(View.FULL_INFORMATION::class)
                 var name: String = "",
                 @JsonView(View.FULL_INFORMATION::class)
-                var ball:Int = 0 ,
+                var ball:Int = 0,
                 var password:String = "",
                 @JsonView(View.FULL_INFORMATION::class)
                 var login:String = "",
                 @JsonView(View.FULL_INFORMATION::class)
-                var roles: Collection<Role> = listOf(),
+                var roles: Set<Role> = setOf(),
                 @JsonView(View.FULL_INFORMATION::class)
                 var group: Group = Group.IB91,
                 @JsonView(View.FULL_INFORMATION::class)
                 @DBRef
                 var laboratoryWorks:Set<LaboratoryWork> = setOf()){
 @Id
+@JsonView(View.FULL_INFORMATION::class)
 var id: String? = null
 }
