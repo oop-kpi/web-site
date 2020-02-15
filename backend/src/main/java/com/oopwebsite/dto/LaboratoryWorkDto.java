@@ -5,34 +5,29 @@ import com.oopwebsite.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 public class LaboratoryWorkDto {
-    private String labId;
     @JsonIgnore
     private MultipartFile file;
     private String link;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     private User owner;
 
-    public String getLabId() {
-        return labId;
-    }
-
-    public void setLabId(String labId) {
-        this.labId = labId;
-    }
-
-    public LaboratoryWorkDto(String labId, MultipartFile file, String link, User owner) {
-        this.labId = labId;
+    public LaboratoryWorkDto( String name,MultipartFile file, String link, User owner) {
+        this.name = name;
         this.file = file;
         this.link = link;
         this.owner = owner;
     }
 
-    public String getName() {
-        return labId;
-    }
 
-    public void setName(String name) {
-        this.labId = name;
-    }
 
     public MultipartFile getFile() {
         return file;
