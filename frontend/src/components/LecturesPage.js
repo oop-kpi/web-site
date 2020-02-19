@@ -13,6 +13,7 @@ import Link from '@material-ui/core/Link';
 import axios from "axios";
 import {API_URL} from "../constants/ApiConstants";
 import { useHistory } from "react-router-dom";
+import Toolbar from "@material-ui/core/Toolbar";
 
 
 
@@ -110,6 +111,7 @@ export default function Album() {
                                 </Card>
                             </Grid>
                         ))}
+                        <Button href="/uploadLecture">Завантажити!</Button>
                     </Grid>
                 </Container>
             </main>

@@ -13,6 +13,6 @@ app:
     path: ${UPLOAD_PATH:?Can`t find upload path}
   auth:
     secret: ${JWT_SECRET:Secret1234}
-    token_expiration: 864000000
+    token_expiration: 8640000000
 server:
   port: 10000
