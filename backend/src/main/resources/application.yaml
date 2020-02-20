@@ -1,4 +1,5 @@
-
+dropbox:
+      access_token: ${dropboxToken:? Cant find access token}
 servlet:
     multipart:
       max-file-size: 50MB
