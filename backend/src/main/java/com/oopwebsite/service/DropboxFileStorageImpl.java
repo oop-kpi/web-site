@@ -2,8 +2,10 @@ package com.oopwebsite.service;
 
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.GetTemporaryLinkResult;
 import com.dropbox.core.v2.files.Metadata;
 import com.oopwebsite.controller.exceptions.FileStorageException;
+import com.oopwebsite.dto.PresentationDto;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -16,16 +18,12 @@ public class DropboxFileStorageImpl implements FileStorageService{
         this.client = client;
     }
 
-    @Override
-    public InputStream downloadFile(String filePath) {
-        return handleDropboxAction(() -> client.files().download(filePath).getInputStream(),
-                String.format("Error downloading file: %s", filePath));
-    }
 
     @Override
-    public FileMetadata uploadFile(String filePath, InputStream fileStream) {
-        return handleDropboxAction(() -> client.files().uploadBuilder(filePath).uploadAndFinish(fileStream),
+    public FileMetadata uploadFile(String filePath, InputStream file) {
+        return handleDropboxAction(() -> client.files().uploadBuilder(filePath).uploadAndFinish(file),
                 String.format("Error uploading file: %s", filePath));
+
     }
 
 
@@ -39,6 +37,18 @@ public class DropboxFileStorageImpl implements FileStorageService{
     @Override
     public void deleteFile(String filePath) {
         handleDropboxAction(() -> client.files().deleteV2(filePath), String.format("Error deleting file: %s", filePath));
+    }
+
+    @Override
+    public PresentationDto getDownloadLink(String filePath) {
+
+        GetTemporaryLinkResult fileLink = handleDropboxAction(() -> client.files().getTemporaryLink(filePath), String.format("Error while getting download link"));
+        PresentationDto presentationDto = new PresentationDto();
+        presentationDto.setFileLength(fileLink.getMetadata().getSize());
+        presentationDto.setFileName(fileLink.getMetadata().getName().substring(fileLink.getMetadata().getName().indexOf('.')+1));
+        presentationDto.setLink(fileLink.getLink());
+        return presentationDto;
+
     }
 
 

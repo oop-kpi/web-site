@@ -14,21 +14,9 @@ import axios from "axios";
 import {API_URL} from "../constants/ApiConstants";
 import { useHistory } from "react-router-dom";
 import Toolbar from "@material-ui/core/Toolbar";
+import {CardHeader, Modal} from "@material-ui/core";
 
 
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
 const useStyles = makeStyles(theme => ({
     icon: {
         marginRight: theme.spacing(2),
@@ -44,6 +32,11 @@ const useStyles = makeStyles(theme => ({
         paddingTop: theme.spacing(8),
         paddingBottom: theme.spacing(8),
     },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     card: {
         height: '100%',
         display: 'flex',
@@ -54,6 +47,12 @@ const useStyles = makeStyles(theme => ({
     },
     cardContent: {
         flexGrow: 1,
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
     },
     footer: {
         backgroundColor: theme.palette.background.paper,
@@ -66,6 +65,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Album() {
     const [card, setCard] = useState([]);
+    const [selectedLecture, setSelectedLecture] = useState(null);
     let history = useHistory()
      useEffect(() => {
         const fetchData =  () => {
@@ -77,11 +77,48 @@ export default function Album() {
         fetchData();
     }, []);
     const classes = useStyles();
+
+    function downloadPresentation(id) {
+
+        axios({
+            url: API_URL + 'lecture/download/' + id,
+            method: 'GET',
+            responseType: 'blob',
+            headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
+        }).then((response) => {
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            alert(JSON.stringify(response.headers['content-disposition']))
+            let headerLine = response.headers['content-disposition']
+            let filename = headerLine.substring(21)
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+        });
+    }
+
     return (
         <React.Fragment>
             <CssBaseline />
             <main>
                 <Container className={classes.cardGrid} maxWidth="md">
+                    {selectedLecture != null && <Modal aria-labelledby="transition-modal-title"
+                                                       aria-describedby="transition-modal-description" className={classes.modal}  open={selectedLecture} onClose={(() => {setSelectedLecture(null)})}>
+                        <Container maxWidth="md" className={classes.paper}>
+                            <Card>
+                                <CardHeader title={selectedLecture.name}></CardHeader>
+                                <CardContent>
+                                    {selectedLecture.description||"No desc provided"}
+                                </CardContent>
+                                <CardActions><Button onClick={event => downloadPresentation(selectedLecture.id)}>
+                                    Download
+                                </Button></CardActions>
+                            </Card>
+                        </Container>
+                    </Modal>
+                        }
                     {/* End hero unit */}
                     <Grid container spacing={4}>
                         {card.map(card => (
@@ -101,7 +138,7 @@ export default function Album() {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small" color="primary">
+                                        <Button size="small" color="primary" onClick={event => setSelectedLecture(card)}>
                                             View
                                         </Button>
                                         <Button size="small" color="primary">
@@ -113,6 +150,7 @@ export default function Album() {
                         ))}
                         <Button href="/uploadLecture">Завантажити!</Button>
                     </Grid>
+
                 </Container>
             </main>
         </React.Fragment>
