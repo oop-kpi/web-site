@@ -10,8 +10,6 @@ spring:
         username: ${dbuser:admin}
         password: ${dbpassword:admin}
 app:
-  upload:
-    path: ${UPLOAD_PATH:?Can`t find upload path}
   auth:
     secret: ${JWT_SECRET:Secret1234}
     token_expiration: 8640000000

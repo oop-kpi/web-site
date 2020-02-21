@@ -1,6 +1,7 @@
 package com.oopwebsite.service;
 
 import com.oopwebsite.OopwebsiteApplication;
+import com.oopwebsite.dto.PresentationDto;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,8 @@ public class DropBoxServiceTest {
     }@Test
     public void downloadFile() throws IOException {
 
-        InputStream inputStream = fileStorage.downloadFile("/keks/kek.txt");
-        assertNotEquals(inputStream,null);
+        PresentationDto link = fileStorage.getDownloadLink("/keks/kek.txt");
+        System.out.println(link.getLink());
+        assertNotEquals(link,null);
     }
 }

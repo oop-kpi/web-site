@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import {API_URL} from "../constants/ApiConstants";
 import axios from "axios";
 import {Alert, AlertTitle} from "@material-ui/lab";
+import {TextareaAutosize} from "@material-ui/core";
 
 function Copyright() {
     return (
@@ -54,6 +55,7 @@ export default function UploadLecture() {
         var formData = new FormData()
         formData.append("name",name)
         formData.append("presentation",file)
+        formData.append("description",description)
         axios.post(apiBaseUrl + 'lecture/upload', formData,{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}})
             .then(function (response) {
                 alert("Successful")
@@ -65,6 +67,7 @@ export default function UploadLecture() {
     }
     const [name, setName] = useState("");
     var [file] = useState(null);
+    var [description,setDescription] = useState("");
     const classes = useStyles();
 
     return (
@@ -92,6 +95,15 @@ export default function UploadLecture() {
                         label="Назва"
                         name="name"
                         autoFocus
+                    />
+                    <TextField
+                        label="Опис"
+                        placeholder="Опис"
+                        multiline
+                        fullWidth="300"
+                        onChange={event => setDescription(event.target.value)}
+                        rows={2}
+                        rowsMax={7}
                     />
                     <Button
                         variant="contained"
