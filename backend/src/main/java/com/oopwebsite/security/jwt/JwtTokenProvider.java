@@ -14,7 +14,7 @@ import java.util.Date;
 public class JwtTokenProvider {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
     @Value("${app.auth.token_expiration}")
-    private final long token_exp= 1000000;
+    private long token_exp;
     @Value("${app.auth.secret}")
     private String secret;
 

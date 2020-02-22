@@ -9,11 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
 import axios from "axios";
 import {API_URL} from "../constants/ApiConstants";
 import { useHistory } from "react-router-dom";
-import Toolbar from "@material-ui/core/Toolbar";
 import {CardHeader, Modal} from "@material-ui/core";
 
 
@@ -70,10 +68,12 @@ export default function Album() {
      useEffect(() => {
         const fetchData =  () => {
             const result = axios(
-                API_URL+'lecture/getAll',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => setCard(resp.data)).catch(err => history.push('login'));
+                API_URL+'lecture/getAll',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => setCard(resp.data)).catch(err => history.push({
+                    pathname: '/login',
+                    search: '?err=401',
 
-
-        };
+                })
+            )};
         fetchData();
     }, []);
     const classes = useStyles();
@@ -88,7 +88,6 @@ export default function Album() {
         }).then((response) => {
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
-            alert(JSON.stringify(response.headers['content-disposition']))
             let headerLine = response.headers['content-disposition']
             let filename = headerLine.substring(21)
             const link = document.createElement('a');
