@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { styled } from '@material-ui/core/styles';
-
+import { withRouter } from 'react-router-dom';
 
 const MyButton = styled(Button)({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -20,15 +20,30 @@ const MyButton = styled(Button)({
     height: 48,
     padding: '0 30px',
 });
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+const vars = {
+ '401':"Будь ласка, увійдіть"
+}
+
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             login: '',
             password: '',
-            errorMsg:false
+            errorMsg:vars[getParameterByName('err')]
         };
     }
+
 
     myChangeHandler = (event) => {
         let nam = event.target.name;
@@ -42,17 +57,21 @@ class Login extends React.Component {
         var self = this;
         var payload = {
             "login": this.state.login,
-            "password": this.state.password
+            "password": this.state.password,
         }
         axios.post(apiBaseUrl + 'auth/login', payload)
             .then(function (response) {
                 localStorage.setItem("token",response.data.toString())
-            }).catch(req => this.setState({"errorMsg":true}))
+                document.location.href = '/lectures'
 
+            }).catch(req => this.setState({"errorMsg":'Неправильні дані!'}))
     }
 
+
     render() {
+
         return (
+
             <Grid
                 container
                 spacing={0}
@@ -61,7 +80,6 @@ class Login extends React.Component {
                 justify="center"
                 style={{ minHeight: '60vh' }}
             >
-
 
 
                 <Grid item xs={3}>
@@ -109,8 +127,7 @@ class Login extends React.Component {
                         </MyButton>
                     {this.state.errorMsg ?
                         <Alert severity="error">
-                            <AlertTitle>Неправильні дані!</AlertTitle>
-                            Перевірте правильність введенних даних!
+                            <AlertTitle>{this.state.errorMsg}</AlertTitle>
                         </Alert> : <dir></dir>
                     }
                 </form>
@@ -129,4 +146,4 @@ class Login extends React.Component {
         );
     }
 }
-export default Login;
+export default withRouter(Login);
