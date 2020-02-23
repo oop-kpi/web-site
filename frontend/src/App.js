@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import Login from "./components/LoginPage";
 import {
@@ -15,6 +15,7 @@ import Button from '@material-ui/core/Button';
 import RegisterPage from "./components/RegisterPage";
 import LecturesPage from "./components/LecturesPage";
 import LectureUploadingPage from "./components/LectureUploadingPage";
+import CurrentUserPage from "./components/CurrentUserPage";
 const useStyles = makeStyles(theme => ({
     root: {
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -31,17 +32,21 @@ const useStyles = makeStyles(theme => ({
 
 
 function App() {
+    const [user,setUser] = useState(null)
     const classes = useStyles();
+     useEffect(()=>{
+          const user = JSON.parse(localStorage.getItem('user'))
+         if (user != null) {
+             setUser(user)
+         }
+     },[])
   return (
       <Router>
           <div className={classes.root}>
               <AppBar position="static" >
                   <Toolbar m={-12321} className={classes.root}>
-                      <Link to="/lectures">Лекції</Link>
-                      <Typography variant="h6"  className={classes.title}>
-                          News
-                      </Typography>
-                      <Button href="login" color="inherit">Login</Button>
+                      <Button className={classes.title} href="/lectures">Лекції</Button>
+                      {user ?<Button href="me">{user.login}</Button> :<Button href="login" color="inherit">Увійти</Button>}
                   </Toolbar>
               </AppBar>
           </div>
@@ -62,6 +67,9 @@ function App() {
             <Route path="/register">
             <RegisterPage></RegisterPage>
           </Route>
+            <Route path="/me">
+            <CurrentUserPage></CurrentUserPage>
+            </Route>
             <Route path="/uploadLecture">
             <LectureUploadingPage></LectureUploadingPage>
           </Route>
