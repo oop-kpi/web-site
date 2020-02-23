@@ -7,11 +7,13 @@ import com.oopwebsite.entity.User;
 import com.oopwebsite.entity.view.View;
 import com.oopwebsite.repository.UserRepository;
 import com.oopwebsite.service.UserService;
+import com.oopwebsite.wrappers.UserWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -39,7 +41,15 @@ public class UserController {
     public User updateUserData(@RequestBody UserUpdateRequest request){
        return service.updateUser(request);
     }
-
+    @GetMapping("me")
+    @ApiOperation(value = "Get current user", response = User.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved users"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+           })
+    public User me(@AuthenticationPrincipal UserWrapper userWrapper){
+        return repository.findById(userWrapper.getId()).get();
+    }
 
     @GetMapping("getAll")
     @ApiOperation(value = "Get list of all users", response = List.class)

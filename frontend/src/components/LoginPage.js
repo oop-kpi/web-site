@@ -62,7 +62,12 @@ class Login extends React.Component {
         axios.post(apiBaseUrl + 'auth/login', payload)
             .then(function (response) {
                 localStorage.setItem("token",response.data.toString())
-                document.location.href = '/lectures'
+                axios.get(apiBaseUrl+'user/me',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(
+               function (response) {
+                   localStorage.setItem("user",JSON.stringify(response.data))
+                   document.location.href = '/lectures'
+
+               } )
 
             }).catch(req => this.setState({"errorMsg":'Неправильні дані!'}))
     }
