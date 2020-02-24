@@ -43,8 +43,9 @@ class Login extends React.Component {
             errorMsg:vars[getParameterByName('err')]
         };
     }
-
-
+    componentDidMount() {
+        localStorage.removeItem('user')
+    }
     myChangeHandler = (event) => {
         let nam = event.target.name;
         let val = event.target.value;

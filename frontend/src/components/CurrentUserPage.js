@@ -5,11 +5,24 @@ import {API_URL} from '../constants/ApiConstants'
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {Card, CardHeader} from "@material-ui/core";
+import {Card, CardHeader, Modal} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import {Redirect} from "react-router";
 import Container from "@material-ui/core/Container";
 import axios from "axios";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import {styled} from "@material-ui/core/styles";
+
+const MyButton = styled(Button)({
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+});
 
 
 
@@ -17,25 +30,53 @@ class CurrentUserPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            selectedLab:null,
             current:{laboratoryWorks:[]}
 
         }
+    }
+    myChangeHandler = (event) => {
+        this.setState({selectedLab:event});
     }
     componentDidMount() {
         let curr
             axios.get(API_URL+'user/me',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(response => this.setState({current:response.data}))
 
     }
-    render() {
+
+render() {
         if (this.state.current == null){
-            return <Redirect to="login"></Redirect>
+            return <Redirect to="login?err=401"></Redirect>
         }
+
+
         return (
 
             <Container  maxWidth="md">
                     <CssBaseline/>
                     <CssBaseline/>
-                    <Card>
+                    <Card raised="true">
+                        {this.state.selectedLab != null &&
+                            <Grid container
+                                  direction="row" alignItems="center">
+                        <Modal  aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" onClose={(() => {this.myChangeHandler(null)})} open>
+                            <Container maxWidth="md" >
+                                <Card>
+                                    <CardHeader title={this.state.selectedLab.name}></CardHeader>
+                                    <CardContent>
+                                        <Typography >
+                                            {this.state.selectedLab.mark<=0 ? "Не перевірена": "Оцінка:"+this.state.selectedLab.mark}
+                                        </Typography>
+
+                                    </CardContent>
+                                    <CardActions>  <Typography >
+                                        {this.state.selectedLab.link? "Посилання:"+this.state.selectedLab.link : <MyButton>Завантажити</MyButton>}
+                                    </Typography></CardActions>
+                                </Card>
+                            </Container>
+                        </Modal>
+                            </Grid>
+                        }
                    <CardHeader title="Про вас:"></CardHeader>
                         <CardContent>
                             <Typography variant="h6" component="h6">
@@ -47,13 +88,17 @@ class CurrentUserPage extends React.Component {
                             <Typography variant="h6" component="h6">
                                 Пошта: {this.state.current.email}
                             </Typography>
-                            <Typography variant="h6" component="h6">
+                            <Typography variant="h5" component="h6">
                                 Лабораторні роботи:
                             </Typography>
                             {this.state.current.laboratoryWorks.map(lab => (
-                                <Grid item key={lab} xs={12} sm={6} md={4}>
+                                    <Grid
+                                        item key={lab}
+                                        container
+                                        direction="column"
+                                        style={{ minHeight: '18vh' }}
+                                    >
                                     <Card>
-
                                         <CardContent>
                                             <Typography gutterBottom variant="h5" component="h2">
                                                 {lab.name}
@@ -62,14 +107,25 @@ class CurrentUserPage extends React.Component {
                                               {lab.mark<=0 ? "Не перевірена": "Оцінка:"+lab.mark}
                                             </Typography>
                                         </CardContent>
+                                        <CardActions>
+                                            <MyButton onClick={event => this.myChangeHandler(lab)}>Переглянути</MyButton>
+                                            { lab.mark<=0&&<MyButton>Редагувати</MyButton>}
+                                        </CardActions>
                                     </Card>
                                 </Grid>
                             ))}
                     </CardContent>
+                        <Grid container
+                              direction="column" alignItems="center">
+
+                            <MyButton href="/uploadLab">Завантажити</MyButton>
+                        </Grid>
+
                     </Card>
               </Container>
 
         );
     }
+
 }
 export default CurrentUserPage;

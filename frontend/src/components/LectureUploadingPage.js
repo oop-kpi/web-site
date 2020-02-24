@@ -11,6 +11,7 @@ import {API_URL} from "../constants/ApiConstants";
 import axios from "axios";
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {TextareaAutosize} from "@material-ui/core";
+import {Redirect} from "react-router";
 
 function Copyright() {
     return (
@@ -72,6 +73,8 @@ export default function UploadLecture() {
 
     return (
         <Container component="main" maxWidth="xs">
+            {localStorage.getItem('user')==null&& <Redirect to="login?err=401"></Redirect>}
+
             <CssBaseline />
             <div className={classes.paper}>
 

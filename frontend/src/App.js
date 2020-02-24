@@ -16,6 +16,7 @@ import RegisterPage from "./components/RegisterPage";
 import LecturesPage from "./components/LecturesPage";
 import LectureUploadingPage from "./components/LectureUploadingPage";
 import CurrentUserPage from "./components/CurrentUserPage";
+import UploadLabComponent from "./components/UploadLabComponent";
 const useStyles = makeStyles(theme => ({
     root: {
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -60,6 +61,9 @@ function App() {
           </Route>
           <Route path="/lectures">
           <LecturesPage></LecturesPage>
+          </Route>
+            <Route path="/uploadLab">
+          <UploadLabComponent></UploadLabComponent>
           </Route>
           <Route path="/login">
             <Login></Login>
