@@ -6,8 +6,11 @@ import com.oopwebsite.dto.LaboratoryWorkDto;
 import com.oopwebsite.entity.LaboratoryWork;
 import com.oopwebsite.entity.User;
 
+import java.util.Collection;
+
 public interface LaboratoryWorkService {
     User saveLaboratory(LaboratoryWorkDto laboratoryWorkDto);
     LaboratoryWork evaluate(EvaluationDto laboratoryWork);
     LaboratoryWork comment(CommentDto commentDto);
+    Collection<LaboratoryWork> getLabsToEvaluate();
 }

@@ -64,6 +64,8 @@ public class UserServiceImpl implements UserService{
 
     private User mapToDao(SignUpRequest registerRequest){
         User user = modelMapper.map(registerRequest, User.class);
+        user.setName(registerRequest.getName());
+        user.setEmail(registerRequest.getEmail());
         user.setGroup(Group.valueOf(registerRequest.getGroup()));
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRoles(Set.of(Role.ROLE_USER));

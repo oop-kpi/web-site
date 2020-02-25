@@ -13,6 +13,7 @@ import axios from "axios";
 import {API_URL} from "../constants/ApiConstants";
 import { useHistory } from "react-router-dom";
 import {CardHeader, Modal} from "@material-ui/core";
+import Comment from "./Comment";
 
 
 const useStyles = makeStyles(theme => ({
@@ -61,19 +62,16 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function Album() {
-    const [user,setUser] = useState(null)
+export default function LabsPoolComponent() {
     const [card, setCard] = useState([]);
-    const [selectedLecture, setSelectedLecture] = useState(null);
+    const [selectedLab, setSelectedLecture] = useState(null);
     let history = useHistory()
-     useEffect(() => {
-         setUser(JSON.parse(localStorage.getItem('user')));
+    useEffect(() => {
         const fetchData =  () => {
-            const result = axios(
-                API_URL+'lecture/getAll',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => setCard(resp.data)).catch(err => history.push({
+            axios.get(
+                API_URL+'lab/getLabsToEvaluate',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => setCard(resp.data)).catch(err => history.push({
                     pathname: '/login',
                     search: '?err=401',
-
                 })
             )};
         fetchData();
@@ -81,7 +79,6 @@ export default function Album() {
     const classes = useStyles();
 
     function downloadPresentation(id) {
-
         axios({
             url: API_URL + 'lecture/download/' + id,
             method: 'GET',
@@ -105,21 +102,28 @@ export default function Album() {
             <CssBaseline />
             <main>
                 <Container className={classes.cardGrid} maxWidth="md">
-                    {selectedLecture != null && <Modal aria-labelledby="transition-modal-title"
-                                                       aria-describedby="transition-modal-description" className={classes.modal}  open={selectedLecture} onClose={(() => {setSelectedLecture(null)})}>
+                    {selectedLab != null && <Modal aria-labelledby="transition-modal-title"
+                                                       aria-describedby="transition-modal-description" className={classes.modal}  open={selectedLab} onClose={(() => {setSelectedLecture(null)})}>
                         <Container maxWidth="md" className={classes.paper}>
                             <Card>
-                                <CardHeader title={selectedLecture.name}></CardHeader>
+                                <CardHeader title={selectedLab.name}></CardHeader>
                                 <CardContent>
-                                    {selectedLecture.description||"Опису не надано!"}
+                                    <Typography>
+                                        Виконав: {selectedLab.user.name}
+                                        <br/>
+                                        Група: {selectedLab.user.group}
+                                        <br/>
+                                    </Typography>
+                                    {  selectedLab.pathToFile.startsWith("http")?<div> Посилання: <a href={selectedLab.pathToFile}>{selectedLab.pathToFile}</a></div>:<Button color="primary">Завантажити</Button> }
+                                    <Comment comments={selectedLab.comments}/>
                                 </CardContent>
-                                <CardActions><Button onClick={event => downloadPresentation(selectedLecture.id)}>
-                                    Завантажити
-                                </Button></CardActions>
+                                <CardActions>
+
+                                </CardActions>
                             </Card>
                         </Container>
                     </Modal>
-                        }
+                    }
                     {/* End hero unit */}
                     <Grid container spacing={4}>
                         {card.map(card => (
@@ -135,19 +139,22 @@ export default function Album() {
                                             {card.name}
                                         </Typography>
                                         <Typography>
-                                            {card.description}
+                                            Виконав: {card.user.name}
+                                            <br/>
+                                            Група: {card.user.group}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
                                         <Button size="small" color="primary" onClick={event => setSelectedLecture(card)}>
                                             Переглянути
                                         </Button>
+                                        <Button size="small" color="primary">
+                                        </Button>
                                     </CardActions>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
-                          {user && user.roles.includes("ROLE_TEACHER" || "ROLE_REVIEWER")&&<Button href="/uploadLecture" fullWidth>Завантажити!</Button>}
 
                 </Container>
             </main>

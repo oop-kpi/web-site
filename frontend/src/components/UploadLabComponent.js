@@ -4,14 +4,11 @@ import React, { Component } from 'react';
 import axios from "axios";
 import {API_URL} from '../constants/ApiConstants'
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { styled } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import useAutocomplete from '@material-ui/lab/useAutocomplete';
 import {Redirect} from "react-router";
 
 
@@ -89,11 +86,10 @@ class UploadLabComponent extends React.Component {
                             label="Номер лабораторної"
                             name="name"
                             autoComplete="email"
-                            placeholder="Лабораторна робота №1"
+                            placeholder="Лабораторна робота №"
                             autoFocus
                             onChange={this.myChangeHandler}
                         />
-
                         <TextField
                             ref="password"
                             variant="outlined"
