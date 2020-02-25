@@ -113,7 +113,7 @@ class RegisterPage extends React.Component {
                             required
                             type="text"
                             fullWidth
-                            name="pib"
+                            name="fio"
                             label="ПІБ"
                             id="password"
                             onChange={this.myChangeHandler}
@@ -125,7 +125,7 @@ class RegisterPage extends React.Component {
                             required
                             type="text"
                             fullWidth
-                            name="pib"
+                            name="email"
                             label="Пошта"
                             id="password"
                             onChange={this.myChangeHandler}

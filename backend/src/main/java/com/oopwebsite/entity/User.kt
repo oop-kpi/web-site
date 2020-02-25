@@ -7,7 +7,7 @@ import javax.persistence.Id
 
 data class User(@JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::class)
                 var email:String ="",
-                @JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::class)
+                @JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::class,View.EVALUATION::class)
                 var name: String = "",
                 @JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::class)
                 var ball:Int = 0,
@@ -16,7 +16,7 @@ data class User(@JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::cla
                 var login:String = "",
                 @JsonView(View.FULL_INFORMATION::class)
                 var roles: Set<Role> = setOf(),
-                @JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::class)
+                @JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::class,View.EVALUATION::class)
                 var group: Group = Group.IB91){
     @DBRef
     @JsonView(View.FULL_INFORMATION::class)

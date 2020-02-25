@@ -43,6 +43,7 @@ public class UserController {
     }
     @GetMapping("me")
     @ApiOperation(value = "Get current user", response = User.class)
+    @JsonView(View.FULL_INFORMATION.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved users"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),

@@ -20,6 +20,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/lab")
 public class LaboratoryWorkController {
@@ -48,8 +51,8 @@ public class LaboratoryWorkController {
 
     }
     @PostMapping("comment")
-    @Secured("ROLE_REVIEWER")
-    @JsonView(View.LABORATORY_WORK.class)
+    @Secured({"ROLE_REVIEWER","ROLE_TEACHER"})
+    @JsonView(View.EVALUATION.class)
     @ApiOperation(value = "Comment lab", response = LaboratoryWork.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully "),
@@ -71,6 +74,17 @@ public class LaboratoryWorkController {
     public LaboratoryWork evaluate(@RequestBody EvaluationDto evaluationDto, @AuthenticationPrincipal UserWrapper user){
         evaluationDto.setOwner(repository.findById(user.getId()).get());
         return laboratoryWorkService.evaluate(evaluationDto);
+
+    }
+    @GetMapping("getLabsToEvaluate")
+    @Secured({"ROLE_TEACHER","ROLE_REVIEWER"})
+    @JsonView(View.EVALUATION.class)
+    @ApiOperation(value = "Get labs for evaluation", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Unauthorized/ dont have permission")})
+    public Collection<LaboratoryWork> getLabsToEvaluate(){
+        return laboratoryWorkService.getLabsToEvaluate();
 
     }
 }

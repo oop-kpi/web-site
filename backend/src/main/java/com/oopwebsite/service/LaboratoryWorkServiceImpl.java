@@ -14,7 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -68,11 +70,16 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     public LaboratoryWork comment(CommentDto commentDto) {
         Comment comment = new Comment();
         LaboratoryWork laboratoryWork = repository.findById(commentDto.getLabId()).orElseThrow(() -> new NoSuchElementException("Cant find laboratory work with id = " + commentDto.getLabId()));
-        comment.setOwner(commentDto.getOwner());
+       comment.setOwner(commentDto.getOwner().getName());
         comment.setContent(commentDto.getContent());
         laboratoryWork.getComments().add(comment);
         repository.save(laboratoryWork);
         return laboratoryWork;
+    }
+
+    @Override
+    public Collection<LaboratoryWork> getLabsToEvaluate() {
+        return repository.findAll().stream().filter(e -> e.getMark()<=0).collect(Collectors.toList());
     }
 
     private LaboratoryWork mapToDao(LaboratoryWorkDto laboratoryWorkDto){

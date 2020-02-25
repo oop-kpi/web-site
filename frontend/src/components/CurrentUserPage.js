@@ -31,7 +31,7 @@ class CurrentUserPage extends React.Component {
         super(props);
         this.state = {
             selectedLab:null,
-            current:{laboratoryWorks:[]}
+            current:{}
 
         }
     }
@@ -91,7 +91,8 @@ render() {
                             <Typography variant="h5" component="h6">
                                 Лабораторні роботи:
                             </Typography>
-                            {this.state.current.laboratoryWorks.map(lab => (
+                            {this.state.current.laboratoryWorks!=null && this.state.current.laboratoryWorks.map(lab => (
+                                lab&&
                                     <Grid
                                         item key={lab}
                                         container
