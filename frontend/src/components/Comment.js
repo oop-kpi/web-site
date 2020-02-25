@@ -33,6 +33,8 @@ const Comment = ({ comments }) => {
                             <ListItemText
                                 primary={
                                     <Typography className={classes.fonts}>
+                                        {comment.owner}
+                                        <br/>
                                         {comment.content}
                                     </Typography>
                                 }

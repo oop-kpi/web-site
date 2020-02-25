@@ -70,7 +70,7 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     public LaboratoryWork comment(CommentDto commentDto) {
         Comment comment = new Comment();
         LaboratoryWork laboratoryWork = repository.findById(commentDto.getLabId()).orElseThrow(() -> new NoSuchElementException("Cant find laboratory work with id = " + commentDto.getLabId()));
-    //    comment.setOwner(commentDto.getOwner());
+       comment.setOwner(commentDto.getOwner().getName());
         comment.setContent(commentDto.getContent());
         laboratoryWork.getComments().add(comment);
         repository.save(laboratoryWork);

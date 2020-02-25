@@ -7,9 +7,9 @@ import javax.persistence.Id
 
 data class Comment(
         @JsonView(View.EVALUATION::class)
-        var content:String = ""
-//        @JsonView(View.EVALUATION::class)
-//        var owner:User? = null
+        var content:String = "",
+        @JsonView(View.EVALUATION::class)
+        var owner:String? = null
 ){
     @Id
     var id: String = ""
