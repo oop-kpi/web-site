@@ -38,8 +38,6 @@ const Comment = ({ comments }) => {
                                         {comment.content}
                                     </Typography>
                                 }
-
-
                             />
                         </ListItem>
                         <Divider />

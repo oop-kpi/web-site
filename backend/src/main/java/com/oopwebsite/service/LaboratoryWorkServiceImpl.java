@@ -46,6 +46,7 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
 
     @Override
     public LaboratoryWork evaluate(EvaluationDto evaluationDto) {
+        evaluationDto.getOwner().getLaboratoryWorks();
         LaboratoryWork laboratoryWork = repository.findById(evaluationDto.getLabId()).orElseThrow(() -> new NoSuchElementException("Cant find lab with id = " + evaluationDto.getLabId()));
         User user = laboratoryWork.getUser();
         CommentDto commentDto = new CommentDto(evaluationDto.getComment(),evaluationDto.getOwner());
