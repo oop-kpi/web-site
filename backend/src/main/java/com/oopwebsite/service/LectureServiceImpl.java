@@ -3,13 +3,12 @@ package com.oopwebsite.service;
 import com.oopwebsite.controller.exceptions.FileStorageException;
 import com.oopwebsite.controller.exceptions.NoSuchElementException;
 import com.oopwebsite.dto.LectureUploadRequest;
-import com.oopwebsite.dto.PresentationDto;
+import com.oopwebsite.dto.FileDto;
 import com.oopwebsite.entity.Lecture;
 import com.oopwebsite.repository.LectureRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
@@ -45,7 +44,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public PresentationDto getDownloadLink(String id) {
+    public FileDto getDownloadLink(String id) {
        return fileStorageService.getDownloadLink(lectureRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Cant find lecture with id = "+id)).getPath());
     }
 }

@@ -8,7 +8,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { styled } from '@material-ui/core/styles';
-import useAutocomplete from '@material-ui/lab/useAutocomplete';
 import {Redirect} from "react-router";
 
 
@@ -30,6 +29,9 @@ class UploadLabComponent extends React.Component {
             file: null,
         };
     }
+    setFile = (event) =>{
+        this.setState({file:event.target.files[0]})
+    }
     myChangeHandler = (event) => {
         let nam = event.target.name;
         let val = event.target.value;
@@ -45,7 +47,7 @@ class UploadLabComponent extends React.Component {
             alert("Оберіть файл або посилання!")
         }
         if (this.state.file !=null)
-        formData.append("presentation",this.state.file)
+        formData.append("file",this.state.file)
         if (this.state.link !=='')
             formData.append("link",this.state.link)
         axios.post(apiBaseUrl + 'lab/create', formData,{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}})
@@ -112,14 +114,13 @@ class UploadLabComponent extends React.Component {
                             name="file"
                             label="Архів з лабою"
                             id="password"
-                            onChange={this.myChangeHandler}
+                            onChange={this.setFile}
                         />
 
                         <MyButton
                             type="submit"
                             fullWidth
-                            variant="contained"
-                        >
+                            variant="contained">
                             Завантажити
                         </MyButton>
                         {this.state.errorMsg ?

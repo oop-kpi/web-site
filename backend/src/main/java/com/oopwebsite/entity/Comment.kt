@@ -6,9 +6,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 import javax.persistence.Id
 
 data class Comment(
-        @JsonView(View.EVALUATION::class)
+        @JsonView(View.EVALUATION::class,View.FULL_INFORMATION::class)
         var content:String = "",
-        @JsonView(View.EVALUATION::class)
+        @JsonView(View.EVALUATION::class,View.FULL_INFORMATION::class)
         var owner:String? = null
 ){
     @Id

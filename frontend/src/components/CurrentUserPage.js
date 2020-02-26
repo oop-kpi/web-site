@@ -13,6 +13,7 @@ import axios from "axios";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import {styled} from "@material-ui/core/styles";
+import Comment from "./Comment";
 
 const MyButton = styled(Button)({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -35,6 +36,7 @@ class CurrentUserPage extends React.Component {
 
         }
     }
+
     myChangeHandler = (event) => {
         this.setState({selectedLab:event});
     }
@@ -45,7 +47,27 @@ class CurrentUserPage extends React.Component {
     }
 
 render() {
-        if (this.state.current == null){
+    function downloadLab(id) {
+
+        axios({
+            url: API_URL + 'lab/download/' + id,
+            method: 'GET',
+            responseType: 'blob',
+            headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
+        }).then((response) => {
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            let headerLine = response.headers['content-disposition']
+            let filename = headerLine.substring(21)
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+        });
+    }
+
+    if (this.state.current == null){
             return <Redirect to="login?err=401"></Redirect>
         }
 
@@ -67,10 +89,16 @@ render() {
                                         <Typography >
                                             {this.state.selectedLab.mark<=0 ? "Не перевірена": "Оцінка:"+this.state.selectedLab.mark}
                                         </Typography>
-
+                                        <CssBaseline/>
+                                        <Typography variant="h5">
+                                            Коментарі:
+                                        </Typography>
+                                        <br/>
+                                        <CssBaseline/>
+                                        <Comment comments={this.state.selectedLab.comments}/>
                                     </CardContent>
                                     <CardActions>  <Typography >
-                                        {this.state.selectedLab.pathToFile.startsWith("http")? "Посилання:"+this.state.selectedLab.pathToFile : <MyButton>Завантажити</MyButton>}
+                                        {this.state.selectedLab.pathToFile.startsWith("http")? "Посилання:"+this.state.selectedLab.pathToFile : <MyButton onClick={(event)=>downloadLab(this.state.selectedLab.id)}>Завантажити</MyButton>}
                                     </Typography></CardActions>
                                 </Card>
                             </Container>
@@ -87,6 +115,9 @@ render() {
                             </Typography>
                             <Typography variant="h6" component="h6">
                                 Пошта: {this.state.current.email}
+                            </Typography>
+                            <Typography variant="h6" component="h6">
+                                Пошта: {this.state.current.group}
                             </Typography>
                             <Typography variant="h5" component="h6">
                                 Лабораторні роботи:

@@ -1,7 +1,9 @@
 package com.oopwebsite.service;
+import com.oopwebsite.controller.exceptions.FileStorageException;
 import com.oopwebsite.controller.exceptions.NoSuchElementException;
 import com.oopwebsite.dto.CommentDto;
 import com.oopwebsite.dto.EvaluationDto;
+import com.oopwebsite.dto.FileDto;
 import com.oopwebsite.dto.LaboratoryWorkDto;
 
 
@@ -14,7 +16,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -24,18 +28,30 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     private LaboratoryWorkRepository repository;
     private ModelMapper modelMapper;
     private UserRepository userRepository;
-    public LaboratoryWorkServiceImpl(LaboratoryWorkRepository repository, ModelMapper modelMapper, UserRepository userRepository) {
+    private FileStorageService fileStorageService;
+    public LaboratoryWorkServiceImpl(LaboratoryWorkRepository repository, ModelMapper modelMapper, UserRepository userRepository,FileStorageService fileStorageService) {
         this.repository = repository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
     public User saveLaboratory(LaboratoryWorkDto laboratoryWorkDto) {
         LaboratoryWork laboratoryWork = new LaboratoryWork();
         laboratoryWork.setName(laboratoryWorkDto.getName());
-        if (StringUtils.hasText(laboratoryWorkDto.getLink()))
-                 laboratoryWork.setPathToFile(laboratoryWorkDto.getLink());
+        if (StringUtils.hasText(laboratoryWorkDto.getLink())) {
+            laboratoryWork.setPathToFile(laboratoryWorkDto.getLink());
+        }else{
+            if (laboratoryWorkDto.getFile()!=null) {
+                try {
+                    laboratoryWork.setPathToFile(fileStorageService.uploadFile("/"+ UUID.randomUUID()+"."+laboratoryWorkDto.getFile().getOriginalFilename(),laboratoryWorkDto.getFile().getInputStream()).getPathDisplay());
+                } catch (IOException e) {
+                    throw new FileStorageException("Error during saving file");
+                }
+            }
+            else  throw new FileStorageException("File is null!");
+        }
         User owner = laboratoryWorkDto.getOwner();
         laboratoryWork.setUser(owner);
         laboratoryWork = repository.insert(laboratoryWork);
@@ -81,6 +97,11 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     @Override
     public Collection<LaboratoryWork> getLabsToEvaluate() {
         return repository.findAll().stream().filter(e -> e.getMark()<=0).collect(Collectors.toList());
+    }
+
+    @Override
+    public FileDto getDownloadLink(String labId) {
+        return fileStorageService.getDownloadLink(repository.findById(labId).orElseThrow(() -> new NoSuchElementException("Cant find lecture with id = "+labId)).getPathToFile());
     }
 
     private LaboratoryWork mapToDao(LaboratoryWorkDto laboratoryWorkDto){

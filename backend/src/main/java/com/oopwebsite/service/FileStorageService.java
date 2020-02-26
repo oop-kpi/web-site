@@ -1,7 +1,7 @@
 package com.oopwebsite.service;
 
 import com.dropbox.core.v2.files.FileMetadata;
-import com.oopwebsite.dto.PresentationDto;
+import com.oopwebsite.dto.FileDto;
 
 import java.io.InputStream;
 
@@ -14,5 +14,5 @@ public interface FileStorageService {
 
         void deleteFile(String filePath);
 
-        PresentationDto getDownloadLink(String filePath);
+        FileDto getDownloadLink(String filePath);
 }

@@ -1,6 +1,6 @@
 package com.oopwebsite.dto;
 
-public class PresentationDto {
+public class FileDto {
     private String fileName;
     private String link;
     private long fileLength;
