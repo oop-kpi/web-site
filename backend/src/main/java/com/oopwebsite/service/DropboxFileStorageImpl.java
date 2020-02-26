@@ -5,7 +5,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.GetTemporaryLinkResult;
 import com.dropbox.core.v2.files.Metadata;
 import com.oopwebsite.controller.exceptions.FileStorageException;
-import com.oopwebsite.dto.PresentationDto;
+import com.oopwebsite.dto.FileDto;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -40,14 +40,14 @@ public class DropboxFileStorageImpl implements FileStorageService{
     }
 
     @Override
-    public PresentationDto getDownloadLink(String filePath) {
+    public FileDto getDownloadLink(String filePath) {
 
         GetTemporaryLinkResult fileLink = handleDropboxAction(() -> client.files().getTemporaryLink(filePath), String.format("Error while getting download link"));
-        PresentationDto presentationDto = new PresentationDto();
-        presentationDto.setFileLength(fileLink.getMetadata().getSize());
-        presentationDto.setFileName(fileLink.getMetadata().getName().substring(fileLink.getMetadata().getName().indexOf('.')+1));
-        presentationDto.setLink(fileLink.getLink());
-        return presentationDto;
+        FileDto fileDto = new FileDto();
+        fileDto.setFileLength(fileLink.getMetadata().getSize());
+        fileDto.setFileName(fileLink.getMetadata().getName().substring(fileLink.getMetadata().getName().indexOf('.')+1));
+        fileDto.setLink(fileLink.getLink());
+        return fileDto;
 
     }
 

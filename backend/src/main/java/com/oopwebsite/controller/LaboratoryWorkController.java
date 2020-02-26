@@ -2,9 +2,7 @@ package com.oopwebsite.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.oopwebsite.controller.exceptions.BadRequestException;
-import com.oopwebsite.dto.CommentDto;
-import com.oopwebsite.dto.EvaluationDto;
-import com.oopwebsite.dto.LaboratoryWorkDto;
+import com.oopwebsite.dto.*;
 import com.oopwebsite.entity.LaboratoryWork;
 import com.oopwebsite.entity.User;
 import com.oopwebsite.entity.view.View;
@@ -14,12 +12,19 @@ import com.oopwebsite.wrappers.UserWrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,6 +67,22 @@ public class LaboratoryWorkController {
         commentDto.setOwner(repository.findById(user.getId()).get());
         return laboratoryWorkService.comment(commentDto);
 
+    }
+    @GetMapping("/download/{id}")
+    @ApiOperation(value = "Get all lecutres", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Unauthorized")})
+    public ResponseEntity<Resource> downloadLab(@PathVariable("id") String lectureId) throws IOException {
+
+        FileDto downloadLink = laboratoryWorkService.getDownloadLink(lectureId);
+        InputStreamResource resource = new InputStreamResource(new URL(downloadLink.getLink()).openStream());
+        HttpHeaders header = new HttpHeaders();
+        header.add("Content-Disposition", "attachment; filename="+downloadLink.getFileName());
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+        return ResponseEntity.ok().headers(header).contentLength(downloadLink.getFileLength()).contentType(MediaType.parseMediaType("application/octet-stream")).body(resource);
     }
     @PostMapping("evaluate")
     @Secured("ROLE_TEACHER")

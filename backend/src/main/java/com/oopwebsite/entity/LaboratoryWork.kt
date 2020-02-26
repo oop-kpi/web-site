@@ -18,6 +18,6 @@ data class LaboratoryWork(
         @DBRef
         var user:User? = null){
         @Id
-        @JsonView(View.EVALUATION::class)
+        @JsonView(View.EVALUATION::class,View.LABORATORY_WORK::class,View.FULL_INFORMATION::class)
         var id: String? = null
 }

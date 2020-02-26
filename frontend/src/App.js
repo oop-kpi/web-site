@@ -49,7 +49,7 @@ function App() {
                   <Toolbar m={-12321} className={classes.root}>
                       <Button className={classes.title} href="/lectures">Лекції</Button>
 
-                      {user && user.roles.includes("ROLE_TEACHER"||"ROLE_REVIEWER")&& <Button href="/evaluateLab">Оцінити лабораторні</Button>}
+                      {user && (user.roles.includes("ROLE_TEACHER") || user.roles.includes("ROLE_REVIEWER"))&& <Button href="/evaluateLab">Оцінити лабораторні</Button>}
                       {user ?<Button href="me">{user.login}</Button> :<Button href="login" color="inherit">Увійти</Button>}
                   </Toolbar>
               </AppBar>

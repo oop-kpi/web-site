@@ -82,9 +82,9 @@ export default function LabsPoolComponent() {
     }, []);
     const classes = useStyles();
 
-    function downloadPresentation(id) {
+    function downloadLab(id) {
         axios({
-            url: API_URL + 'lecture/download/' + id,
+            url: API_URL + 'lab/download/' + id,
             method: 'GET',
             responseType: 'blob',
             headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
@@ -144,7 +144,7 @@ export default function LabsPoolComponent() {
                                         Група: {selectedLab.user.group}
                                         <br/>
                                     </Typography>
-                                    {  selectedLab.pathToFile.startsWith("http")?<div> Посилання: <a href={selectedLab.pathToFile}>{selectedLab.pathToFile}</a></div>:<Button color="primary">Завантажити</Button> }
+                                    {  selectedLab.pathToFile.startsWith("http")?<div> Посилання: <a href={selectedLab.pathToFile}>{selectedLab.pathToFile}</a></div>:<Button onClick={(event) => downloadLab(this.state.selectedLab.id)} color="primary">Завантажити</Button> }
                                     <Typography variant="h4" >
                                         Коментарі:
                                     </Typography>
