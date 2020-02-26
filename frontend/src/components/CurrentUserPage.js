@@ -70,7 +70,7 @@ render() {
 
                                     </CardContent>
                                     <CardActions>  <Typography >
-                                        {this.state.selectedLab.link? "Посилання:"+this.state.selectedLab.link : <MyButton>Завантажити</MyButton>}
+                                        {this.state.selectedLab.pathToFile.startsWith("http")? "Посилання:"+this.state.selectedLab.pathToFile : <MyButton>Завантажити</MyButton>}
                                     </Typography></CardActions>
                                 </Card>
                             </Container>

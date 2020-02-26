@@ -12,7 +12,7 @@ import Container from '@material-ui/core/Container';
 import axios from "axios";
 import {API_URL} from "../constants/ApiConstants";
 import { useHistory } from "react-router-dom";
-import {CardHeader, Modal} from "@material-ui/core";
+import {CardHeader, Modal, TextField} from "@material-ui/core";
 import Comment from "./Comment";
 
 
@@ -65,15 +65,19 @@ const useStyles = makeStyles(theme => ({
 export default function LabsPoolComponent() {
     const [card, setCard] = useState([]);
     const [selectedLab, setSelectedLecture] = useState(null);
+    const [user,setUser] = useState(null)
+    const [content,setContent] = useState("")
+    const [ball,setBall] = useState(0)
+    const fetchData =  () => {
+        setUser(JSON.parse(localStorage.getItem('user')))
+        axios.get(
+            API_URL+'lab/getLabsToEvaluate',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => setCard(resp.data)).catch(err => history.push({
+                pathname: '/login',
+                search: '?err=401',
+            })
+        )};
     let history = useHistory()
     useEffect(() => {
-        const fetchData =  () => {
-            axios.get(
-                API_URL+'lab/getLabsToEvaluate',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => setCard(resp.data)).catch(err => history.push({
-                    pathname: '/login',
-                    search: '?err=401',
-                })
-            )};
         fetchData();
     }, []);
     const classes = useStyles();
@@ -96,6 +100,35 @@ export default function LabsPoolComponent() {
             link.click();
         });
     }
+    function evaluate(labIds) {
+        alert(content.value)
+        var comment = {
+            comment:content,
+            labId:labIds,
+            mark:ball
+        }
+        axios.post(API_URL+"lab/evaluate",comment,{headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}}).then(resp=>setSelectedLecture(null),fetchData())
+    }
+
+    function comment(labIds) {
+        alert(content)
+        var comment = {
+            content:content,
+            labId:labIds
+        }
+        axios.post(API_URL+"lab/comment",comment,{headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}}).then(resp=>
+          fetchData())
+    }
+
+    function decide(labid) {
+        alert(JSON.stringify(content))
+        alert(labid)
+        if (user.roles.includes("ROLE_TEACHER")){
+            evaluate(labid)
+        } else{
+            comment(labid)
+        }
+    }
 
     return (
         <React.Fragment>
@@ -115,7 +148,21 @@ export default function LabsPoolComponent() {
                                         <br/>
                                     </Typography>
                                     {  selectedLab.pathToFile.startsWith("http")?<div> Посилання: <a href={selectedLab.pathToFile}>{selectedLab.pathToFile}</a></div>:<Button color="primary">Завантажити</Button> }
+                                    <Typography variant="h4" >
+                                        Коментарі:
+                                    </Typography>
+                                    <CssBaseline/>
                                     <Comment comments={selectedLab.comments}/>
+                                    <div>
+                                        <Typography>
+                                            {user.roles.includes('ROLE_TEACHER')? "Оцінити" : "Коментувати"}
+                                        </Typography>
+                                        <TextField type="text" name="content" multiline fullWidth onChange={(event)=>setContent(event.target.value)} label="Введіть коментарій"></TextField>
+                                        <br/>
+                                        {user.roles.includes('ROLE_TEACHER') && <TextField onChange={(event) => setBall(event.target.value) } label="Введіть оцінку">0</TextField> }
+                                        <br/>
+                                        <Button onClick={()=>decide(selectedLab.id)} color="primary" fullWidth >Відправити!</Button>
+                                    </div>
                                 </CardContent>
                                 <CardActions>
 
