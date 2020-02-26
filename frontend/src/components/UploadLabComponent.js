@@ -9,6 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { styled } from '@material-ui/core/styles';
 import {Redirect} from "react-router";
+import {green} from "@material-ui/core/colors";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {LinearProgress} from "@material-ui/core";
 
 
 const MyButton = styled(Button)({
@@ -19,6 +22,14 @@ const MyButton = styled(Button)({
     color: 'white',
     height: 48,
     padding: '0 30px',
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
 });
 class UploadLabComponent extends React.Component {
     constructor(props) {
@@ -27,6 +38,7 @@ class UploadLabComponent extends React.Component {
             name: '',
             link: '',
             file: null,
+            loading:false
         };
     }
     setFile = (event) =>{
@@ -50,10 +62,11 @@ class UploadLabComponent extends React.Component {
         formData.append("file",this.state.file)
         if (this.state.link !=='')
             formData.append("link",this.state.link)
+        this.setState({loading:true})
         axios.post(apiBaseUrl + 'lab/create', formData,{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}})
-            .then(function (response) {
-                    alert("Успішно!")
-                }
+            .then(response =>
+                    this.setState({loading:false})
+
             ).catch(req => this.setState({"errorMsg":req.toString()}))
 
     }
@@ -123,6 +136,7 @@ class UploadLabComponent extends React.Component {
                             variant="contained">
                             Завантажити
                         </MyButton>
+                        {this.state.loading && <LinearProgress />}
                         {this.state.errorMsg ?
                             <Alert severity="error">
                                 <AlertTitle>{this.state.errorMsg}</AlertTitle>
