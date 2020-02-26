@@ -12,6 +12,8 @@ import axios from "axios";
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {TextareaAutosize} from "@material-ui/core";
 import {Redirect} from "react-router";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 function Copyright() {
     return (
@@ -57,9 +59,10 @@ export default function UploadLecture() {
         formData.append("name",name)
         formData.append("presentation",file)
         formData.append("description",description)
+        setLoading(true)
         axios.post(apiBaseUrl + 'lecture/upload', formData,{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}})
             .then(function (response) {
-                alert("Successful")
+                setLoading(false)
             }).catch(req => (errorMsg = 'failed!'))
 
     }
@@ -67,6 +70,7 @@ export default function UploadLecture() {
         file = event.target.files[0]
     }
     const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
     var [file] = useState(null);
     var [description,setDescription] = useState("");
     const classes = useStyles();
@@ -130,6 +134,7 @@ export default function UploadLecture() {
                     >
                         Завантажити
                     </Button>
+                    {loading && <LinearProgress />}
                 </form>
             </div>
             <Box mt={8}>

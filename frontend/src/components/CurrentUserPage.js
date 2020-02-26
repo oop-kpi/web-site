@@ -73,7 +73,6 @@ render() {
 
 
         return (
-
             <Container  maxWidth="md">
                     <CssBaseline/>
                     <CssBaseline/>
@@ -152,12 +151,9 @@ render() {
 
                             <MyButton href="/uploadLab">Завантажити</MyButton>
                         </Grid>
-
                     </Card>
               </Container>
-
         );
     }
-
 }
 export default CurrentUserPage;

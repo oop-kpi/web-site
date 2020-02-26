@@ -101,13 +101,13 @@ export default function LabsPoolComponent() {
         });
     }
     function evaluate(labIds) {
-        alert(content.value)
         var comment = {
             comment:content,
             labId:labIds,
             mark:ball
         }
-        axios.post(API_URL+"lab/evaluate",comment,{headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}}).then(resp=>setSelectedLecture(null),fetchData())
+        axios.post(API_URL+"lab/evaluate",comment,{headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}}).then(resp=>setSelectedLecture(null))
+        window.location.reload(true)
     }
 
     function comment(labIds) {
@@ -115,8 +115,8 @@ export default function LabsPoolComponent() {
             content:content,
             labId:labIds
         }
-        axios.post(API_URL+"lab/comment",comment,{headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}}).then(resp=>
-          fetchData())
+        axios.post(API_URL+"lab/comment",comment,{headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}}).then()
+        window.location.reload(true)
     }
 
     function decide(labid) {
@@ -144,7 +144,7 @@ export default function LabsPoolComponent() {
                                         Група: {selectedLab.user.group}
                                         <br/>
                                     </Typography>
-                                    {  selectedLab.pathToFile.startsWith("http")?<div> Посилання: <a href={selectedLab.pathToFile}>{selectedLab.pathToFile}</a></div>:<Button onClick={(event) => downloadLab(this.state.selectedLab.id)} color="primary">Завантажити</Button> }
+                                    {selectedLab.pathToFile.startsWith("http")?<div> Посилання: <a href={selectedLab.pathToFile}>{selectedLab.pathToFile}</a></div>:<Button onClick={(event) => downloadLab(selectedLab.id)} color="primary">Завантажити</Button>}
                                     <Typography variant="h4" >
                                         Коментарі:
                                     </Typography>
