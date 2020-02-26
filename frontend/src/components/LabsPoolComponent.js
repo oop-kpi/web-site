@@ -111,7 +111,6 @@ export default function LabsPoolComponent() {
     }
 
     function comment(labIds) {
-        alert(content)
         var comment = {
             content:content,
             labId:labIds
@@ -121,8 +120,6 @@ export default function LabsPoolComponent() {
     }
 
     function decide(labid) {
-        alert(JSON.stringify(content))
-        alert(labid)
         if (user.roles.includes("ROLE_TEACHER")){
             evaluate(labid)
         } else{
