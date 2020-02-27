@@ -1,15 +1,10 @@
 package com.oopwebsite.service;
 import com.oopwebsite.controller.exceptions.FileStorageException;
 import com.oopwebsite.controller.exceptions.NoSuchElementException;
-import com.oopwebsite.dto.CommentDto;
-import com.oopwebsite.dto.EvaluationDto;
-import com.oopwebsite.dto.FileDto;
-import com.oopwebsite.dto.LaboratoryWorkDto;
+import com.oopwebsite.dto.*;
 
 
-import com.oopwebsite.entity.Comment;
-import com.oopwebsite.entity.LaboratoryWork;
-import com.oopwebsite.entity.User;
+import com.oopwebsite.entity.*;
 import com.oopwebsite.repository.LaboratoryWorkRepository;
 import com.oopwebsite.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -18,6 +13,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -37,22 +34,22 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     }
 
     @Override
-    public User saveLaboratory(LaboratoryWorkDto laboratoryWorkDto) {
+    public User saveLaboratory(LaboratoryUploadWorkDto laboratoryUploadWorkDto) {
         LaboratoryWork laboratoryWork = new LaboratoryWork();
-        laboratoryWork.setName(laboratoryWorkDto.getName());
-        if (StringUtils.hasText(laboratoryWorkDto.getLink())) {
-            laboratoryWork.setPathToFile(laboratoryWorkDto.getLink());
+        laboratoryWork.setName(laboratoryUploadWorkDto.getName());
+        if (StringUtils.hasText(laboratoryUploadWorkDto.getLink())) {
+            laboratoryWork.setPathToFile(laboratoryUploadWorkDto.getLink());
         }else{
-            if (laboratoryWorkDto.getFile()!=null) {
+            if (laboratoryUploadWorkDto.getFile()!=null) {
                 try {
-                    laboratoryWork.setPathToFile(fileStorageService.uploadFile("/"+ UUID.randomUUID()+"."+laboratoryWorkDto.getFile().getOriginalFilename(),laboratoryWorkDto.getFile().getInputStream()).getPathDisplay());
+                    laboratoryWork.setPathToFile(fileStorageService.uploadFile("/"+ UUID.randomUUID()+"."+ laboratoryUploadWorkDto.getFile().getOriginalFilename(), laboratoryUploadWorkDto.getFile().getInputStream()).getPathDisplay());
                 } catch (IOException e) {
                     throw new FileStorageException("Error during saving file");
                 }
             }
             else  throw new FileStorageException("File is null!");
         }
-        User owner = laboratoryWorkDto.getOwner();
+        User owner = laboratoryUploadWorkDto.getOwner();
         laboratoryWork.setUser(owner);
         laboratoryWork = repository.insert(laboratoryWork);
         owner.getLaboratoryWorks().add(laboratoryWork);
@@ -60,6 +57,33 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
         return owner;
     }
 
+    @Override
+    public LaboratoryWork updateLaboratory(LaboratoryWorkUpdateDto laboratoryWorkUpdateDto) {
+        LaboratoryWork laboratoryWork = mapToDao(laboratoryWorkUpdateDto);
+        repository.save(laboratoryWork);
+        return laboratoryWork;
+    }
+
+    private LaboratoryWork mapToDao(LaboratoryWorkUpdateDto updateRequest){
+        LaboratoryWork prev = repository.findById(updateRequest.getId()).orElseThrow(()->new NoSuchElementException("Cant find lab with id = "+updateRequest.getId()));
+        LaboratoryWork lab = new LaboratoryWork();
+        lab.setId(prev.getId());
+        lab.setUser(prev.getUser());
+        lab.setName(StringUtils.isEmpty(updateRequest.getName())? prev.getName(): updateRequest.getName());
+        if (StringUtils.hasText(updateRequest.getLink())) {
+            lab.setPathToFile(updateRequest.getLink());
+        }else{
+            if (updateRequest.getFile()!=null) {
+                try {
+                    lab.setPathToFile(fileStorageService.uploadFile("/"+ UUID.randomUUID()+"."+ updateRequest.getFile().getOriginalFilename(), updateRequest.getFile().getInputStream()).getPathDisplay());
+                } catch (IOException e) {
+                    throw new FileStorageException("Error during saving file");
+                }
+            }
+            else  throw new FileStorageException("File is null!");
+        }
+        return lab;
+    }
     @Override
     public LaboratoryWork evaluate(EvaluationDto evaluationDto) {
         evaluationDto.getOwner().getLaboratoryWorks();
@@ -104,10 +128,10 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
         return fileStorageService.getDownloadLink(repository.findById(labId).orElseThrow(() -> new NoSuchElementException("Cant find lecture with id = "+labId)).getPathToFile());
     }
 
-    private LaboratoryWork mapToDao(LaboratoryWorkDto laboratoryWorkDto){
-        LaboratoryWork laboratoryWork = modelMapper.map(laboratoryWorkDto, LaboratoryWork.class);
-        if (laboratoryWorkDto.getLink()!=null){
-            laboratoryWork.setPathToFile(laboratoryWorkDto.getLink());
+    private LaboratoryWork mapToDao(LaboratoryUploadWorkDto laboratoryUploadWorkDto){
+        LaboratoryWork laboratoryWork = modelMapper.map(laboratoryUploadWorkDto, LaboratoryWork.class);
+        if (laboratoryUploadWorkDto.getLink()!=null){
+            laboratoryWork.setPathToFile(laboratoryUploadWorkDto.getLink());
         }
         //TODO Uploading requests with files to static file storage
         return laboratoryWork;
