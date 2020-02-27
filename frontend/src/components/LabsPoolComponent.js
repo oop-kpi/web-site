@@ -169,38 +169,39 @@ export default function LabsPoolComponent() {
                     </Modal>
                     }
                     {/* End hero unit */}
-                    <Grid container spacing={4}>
-                        {card.map(card => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
-                                <Card className={classes.card}>
-                                    <CardMedia
-                                        className={classes.cardMedia}
-                                        image="https://source.unsplash.com/random"
-                                        title= ""
-                                    />
-                                    <CardContent className={classes.cardContent}>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            {card.name}
-                                        </Typography>
-                                        <Typography>
-                                            Виконав: {card.user.name}
-                                            <br/>
-                                            Група: {card.user.group}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button size="small" color="primary" onClick={event => setSelectedLecture(card)}>
-                                            Переглянути
-                                        </Button>
-                                        <Button size="small" color="primary">
-                                        </Button>
-                                    </CardActions>
-                                </Card>
-                            </Grid>
-                        ))}
-                    </Grid>
-
-                </Container>
+                    {card != null &&
+                        <Grid container spacing={4}>
+                            {card.map(card => (
+                                <Grid item key={card} xs={12} sm={6} md={4}>
+                                    <Card className={classes.card}>
+                                        <CardMedia
+                                            className={classes.cardMedia}
+                                            image="https://source.unsplash.com/random"
+                                            title=""
+                                        />
+                                        <CardContent className={classes.cardContent}>
+                                            <Typography gutterBottom variant="h5" component="h2">
+                                                {card.name}
+                                            </Typography>
+                                            <Typography>
+                                                Виконав: {card.user.name}
+                                                <br/>
+                                                Група: {card.user.group}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button size="small" color="primary"
+                                                    onClick={event => setSelectedLecture(card)}>
+                                                Переглянути
+                                            </Button>
+                                            <Button size="small" color="primary">
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            ))}
+                        </Grid>}
+                        </Container>
             </main>
         </React.Fragment>
     );

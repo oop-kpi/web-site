@@ -51,8 +51,24 @@ public class LaboratoryWorkController {
                                      @RequestParam(value = "link",required = false) String link,
                                      @AuthenticationPrincipal UserWrapper user){
         if (!StringUtils.hasText(link)&&multipartFile==null) throw new BadRequestException("File and link is empty!");
-        LaboratoryWorkDto laboratoryWorkDto = new LaboratoryWorkDto(name,multipartFile,link,repository.findById(user.getId()).get());
-        return laboratoryWorkService.saveLaboratory(laboratoryWorkDto);
+        LaboratoryUploadWorkDto laboratoryUploadWorkDto = new LaboratoryUploadWorkDto(name,multipartFile,link,repository.findById(user.getId()).get());
+        return laboratoryWorkService.saveLaboratory(laboratoryUploadWorkDto);
+
+    }
+    @PatchMapping("update")
+    @JsonView(View.LABORATORY_WORK.class)
+    @ApiOperation(value = "Update lab", response = User.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code=400, message = "Bad request")})
+    public LaboratoryWork updateLab(@RequestParam("id") String id,@RequestParam(value = "file",required = false) MultipartFile multipartFile,
+                                     @RequestParam(value = "name",required = false) String name,
+                                     @RequestParam(value = "link",required = false) String link,
+                                     @AuthenticationPrincipal UserWrapper user){
+        if (!StringUtils.hasText(link)&&multipartFile==null) throw new BadRequestException("File and link is empty!");
+        LaboratoryWorkUpdateDto laboratoryUploadWorkDto = new LaboratoryWorkUpdateDto(id,name,multipartFile,link);
+        return laboratoryWorkService.updateLaboratory(laboratoryUploadWorkDto);
 
     }
     @PostMapping("comment")

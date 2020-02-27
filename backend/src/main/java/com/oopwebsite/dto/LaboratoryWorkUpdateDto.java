@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oopwebsite.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
-public class LaboratoryWorkDto {
+public class LaboratoryWorkUpdateDto {
+    private String id;
     @JsonIgnore
     private MultipartFile file;
     private String link;
@@ -18,16 +19,20 @@ public class LaboratoryWorkDto {
         this.name = name;
     }
 
-    private User owner;
-
-    public LaboratoryWorkDto( String name,MultipartFile file, String link, User owner) {
+    public LaboratoryWorkUpdateDto(String id,String name, MultipartFile file, String link) {
+        this.id = id;
         this.name = name;
         this.file = file;
         this.link = link;
-        this.owner = owner;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public MultipartFile getFile() {
         return file;
@@ -45,11 +50,4 @@ public class LaboratoryWorkDto {
         this.link = link;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
 }
