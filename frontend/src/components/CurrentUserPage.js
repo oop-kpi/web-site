@@ -14,6 +14,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import {styled} from "@material-ui/core/styles";
 import Comment from "./Comment";
+import EditLabPage from "./EditLabPage";
 
 const MyButton = styled(Button)({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -23,6 +24,7 @@ const MyButton = styled(Button)({
     color: 'white',
     height: 48,
     padding: '0 30px',
+    margin: '20px'
 });
 
 
@@ -31,6 +33,7 @@ class CurrentUserPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            redirectLab:null,
             selectedLab:null,
             current:{}
 
@@ -45,8 +48,13 @@ class CurrentUserPage extends React.Component {
             axios.get(API_URL+'user/me',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(response => this.setState({current:response.data}))
 
     }
+    updateLab = (lab) => {
+        this.setState({redirectLab: lab})
+    }
 
-render() {
+
+
+    render() {
     function downloadLab(id) {
 
         axios({
@@ -70,9 +78,15 @@ render() {
     if (this.state.current == null){
             return <Redirect to="login?err=401"></Redirect>
         }
+    if (this.state.redirectLab != null){
+            return <EditLabPage selectedLab={this.state.redirectLab}></EditLabPage>
+        }
 
 
-        return (
+
+
+    return (
+
             <Container  maxWidth="md">
                     <CssBaseline/>
                     <CssBaseline/>
@@ -140,7 +154,7 @@ render() {
                                         </CardContent>
                                         <CardActions>
                                             <MyButton onClick={event => this.myChangeHandler(lab)}>Переглянути</MyButton>
-                                            { lab.mark<=0&&<MyButton>Редагувати</MyButton>}
+                                            <MyButton onClick={(event)=>this.updateLab(lab)}>Редагувати</MyButton>
                                         </CardActions>
                                     </Card>
                                 </Grid>
