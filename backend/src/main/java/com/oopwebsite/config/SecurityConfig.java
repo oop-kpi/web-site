@@ -77,7 +77,8 @@ private static final String[] AUTH_WHITELIST = {
                                                             "/**/*.jpg",
                                                             "/**/*.html",
                                                             "/**/*.css",
-                                                            "/**/*.js","/img/**")
+                                                            "/**/*.js","/img/**",
+                                                            "/api/leaderboard")
                                                                 .permitAll()
                                                                 .anyRequest().authenticated();
         http.addFilterBefore(jwtToken, UsernamePasswordAuthenticationFilter.class);
