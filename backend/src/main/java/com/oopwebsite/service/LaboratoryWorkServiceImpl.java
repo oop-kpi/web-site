@@ -60,7 +60,11 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     @Override
     public LaboratoryWork updateLaboratory(LaboratoryWorkUpdateDto laboratoryWorkUpdateDto) {
         LaboratoryWork laboratoryWork = mapToDao(laboratoryWorkUpdateDto);
+        User user = laboratoryWork.getUser();
+        user.setBall(updateBall(user));
+        user.getLaboratoryWorks().add(laboratoryWork);
         repository.save(laboratoryWork);
+        userRepository.save(user);
         return laboratoryWork;
     }
 
@@ -70,6 +74,8 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
         lab.setId(prev.getId());
         lab.setUser(prev.getUser());
         lab.setName(StringUtils.isEmpty(updateRequest.getName())? prev.getName(): updateRequest.getName());
+        lab.setMark(0);
+
         if (StringUtils.hasText(updateRequest.getLink())) {
             lab.setPathToFile(updateRequest.getLink());
         }else{
@@ -93,6 +99,7 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
         commentDto.setLabId(evaluationDto.getLabId());
         laboratoryWork = comment(commentDto);
         laboratoryWork.setMark(evaluationDto.getMark());
+        user.getLaboratoryWorks().add(laboratoryWork);
         user.setBall(updateBall(user));
         repository.save(laboratoryWork);
         userRepository.save(user);

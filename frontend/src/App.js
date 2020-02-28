@@ -19,6 +19,7 @@ import CurrentUserPage from "./components/CurrentUserPage";
 import UploadLabComponent from "./components/UploadLabComponent";
 import LabsPoolComponent from "./components/LabsPoolComponent";
 import EditLabPage from "./components/EditLabPage";
+import LeaderboardComponent from "./components/LeaderboardComponent";
 const useStyles = makeStyles(theme => ({
     root: {
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -49,6 +50,7 @@ function App() {
               <AppBar position="static" >
                   <Toolbar m={-12321} className={classes.root}>
                       <Button className={classes.title} href="/lectures">Лекції</Button>
+                      <Button className={classes.title} href="/leaderboard">Рейтинг</Button>
                       {user && (user.roles.includes("ROLE_TEACHER") || user.roles.includes("ROLE_REVIEWER"))&& <Button href="/evaluateLab">Оцінити лабораторні</Button>}
                       {user ?<Button href="me">{user.login}</Button> :<Button href="login" color="inherit">Увійти</Button>}
                   </Toolbar>
@@ -61,6 +63,9 @@ function App() {
           </Route>
           <Route path="/about">
             <div>About</div>
+          </Route>
+            <Route path="/leaderboard">
+                <LeaderboardComponent></LeaderboardComponent>
           </Route>
           <Route path="/lectures">
           <LecturesPage></LecturesPage>
