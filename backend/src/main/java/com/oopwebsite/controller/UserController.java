@@ -54,6 +54,7 @@ public class UserController {
 
     @GetMapping("getAll")
     @ApiOperation(value = "Get list of all users", response = List.class)
+    @Secured("ROLE_TEACHER")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved users list"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource")})

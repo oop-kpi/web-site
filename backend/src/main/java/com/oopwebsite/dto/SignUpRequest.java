@@ -1,6 +1,7 @@
 package com.oopwebsite.dto;
 
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -10,9 +11,10 @@ public class SignUpRequest {
     @NotBlank
     private String name;
     @NotBlank
+    @Email(message = "Неправильно введена пошта!")
     private String email;
     @NotBlank
-    @Size(min = 6)
+    @Size(min = 6,message = "Пароль має містити мінімум 6 символів!")
     private String password;
     @NotBlank
     private String group;
