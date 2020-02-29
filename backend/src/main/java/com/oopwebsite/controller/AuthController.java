@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @Api("Authentication service")
@@ -43,10 +42,11 @@ public class AuthController {
     @ApiOperation(value = "User signup request", response = Void.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User successfully signed up"),
-            @ApiResponse(code = 400, message = "User already exists")})
+            @ApiResponse(code = 400, message = "User already exists"),
+            @ApiResponse(code = 401, message = "Bad request")})
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest, BindingResult result) {
-        if (result.hasErrors()){
-            throw new BadRequestException("Password should contain at least 6 symbols");
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
         }
         userService.registerUser(signUpRequest);
         return ResponseEntity.ok().body( "User successfully signed up");

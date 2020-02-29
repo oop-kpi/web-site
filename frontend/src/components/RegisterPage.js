@@ -59,7 +59,7 @@ class RegisterPage extends React.Component {
             .then(function (response) {
                     console.log("Login successful");
                 }
-            ).catch(req => (this.setState({"errorMsg":req.response.data.message})))
+            ).catch(req => (req))
 
     }
 

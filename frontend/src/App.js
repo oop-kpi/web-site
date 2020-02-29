@@ -20,6 +20,7 @@ import UploadLabComponent from "./components/UploadLabComponent";
 import LabsPoolComponent from "./components/LabsPoolComponent";
 import EditLabPage from "./components/EditLabPage";
 import LeaderboardComponent from "./components/LeaderboardComponent";
+import BrowseUsersComponent from "./components/BrowseUsersComponent";
 const useStyles = makeStyles(theme => ({
     root: {
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -52,6 +53,7 @@ function App() {
                       <Button className={classes.title} href="/lectures">Лекції</Button>
                       <Button className={classes.title} href="/leaderboard">Рейтинг</Button>
                       {user && (user.roles.includes("ROLE_TEACHER") || user.roles.includes("ROLE_REVIEWER"))&& <Button href="/evaluateLab">Оцінити лабораторні</Button>}
+                      {user && (user.roles.includes("ROLE_TEACHER") || user.roles.includes("ROLE_REVIEWER"))&& <Button href="/browse-users">Список учнів</Button>}
                       {user ?<Button href="me">{user.login}</Button> :<Button href="login" color="inherit">Увійти</Button>}
                   </Toolbar>
               </AppBar>
@@ -69,6 +71,9 @@ function App() {
           </Route>
           <Route path="/lectures">
           <LecturesPage></LecturesPage>
+          </Route>
+            <Route path="/browse-users">
+          <BrowseUsersComponent></BrowseUsersComponent>
           </Route>
             <Route path="/uploadLab">
           <UploadLabComponent></UploadLabComponent>
