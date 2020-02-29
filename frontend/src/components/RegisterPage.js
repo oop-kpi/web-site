@@ -59,7 +59,7 @@ class RegisterPage extends React.Component {
             .then(function (response) {
                     console.log("Login successful");
                 }
-            ).catch(req => this.setState({"errorMsg":req.toString()}))
+            ).catch(req => (this.setState({"errorMsg":req.response.data.message})))
 
     }
 
@@ -154,8 +154,7 @@ class RegisterPage extends React.Component {
                         </MyButton>
                         {this.state.errorMsg ?
                             <Alert severity="error">
-                                <AlertTitle>Неправильні дані!</AlertTitle>
-                                Перевірте правильність введенних даних!
+                                <AlertTitle>{this.state.errorMsg}</AlertTitle>
                             </Alert> : <dir></dir>
                         }
                     </form>

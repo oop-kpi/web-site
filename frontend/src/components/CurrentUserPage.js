@@ -5,7 +5,7 @@ import {API_URL} from '../constants/ApiConstants'
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {Card, CardHeader, Modal} from "@material-ui/core";
+import {Card, CardHeader, LinearProgress, Modal} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import {Redirect} from "react-router";
 import Container from "@material-ui/core/Container";
@@ -36,7 +36,6 @@ class CurrentUserPage extends React.Component {
             redirectLab:null,
             selectedLab:null,
             current:{}
-
         }
     }
 
@@ -53,17 +52,16 @@ class CurrentUserPage extends React.Component {
     }
 
 
-
     render() {
-    function downloadLab(id) {
 
+
+        function downloadLab(id) {
         axios({
             url: API_URL + 'lab/download/' + id,
             method: 'GET',
             responseType: 'blob',
             headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
         }).then((response) => {
-
             const url = window.URL.createObjectURL(new Blob([response.data]));
             let headerLine = response.headers['content-disposition']
             let filename = headerLine.substring(21)
@@ -73,6 +71,7 @@ class CurrentUserPage extends React.Component {
             document.body.appendChild(link);
             link.click();
         });
+
     }
 
     if (this.state.current == null){
@@ -113,6 +112,7 @@ class CurrentUserPage extends React.Component {
                                     <CardActions>  <Typography >
                                         {this.state.selectedLab.pathToFile.startsWith("http")? "Посилання:"+this.state.selectedLab.pathToFile : <MyButton onClick={(event)=>downloadLab(this.state.selectedLab.id)}>Завантажити</MyButton>}
                                     </Typography></CardActions>
+                                    {this.state.loading && <LinearProgress />}
                                 </Card>
                             </Container>
                         </Modal>
