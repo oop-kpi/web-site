@@ -1,11 +1,20 @@
 package com.oopwebsite.dto;
 
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class SignUpRequest {
+    @NotBlank
     private String login;
+    @NotBlank
     private String name;
+    @NotBlank
     private String email;
+    @NotBlank
+    @Size(min = 6)
     private String password;
+    @NotBlank
     private String group;
 
     public SignUpRequest(String login, String name, String email, String password, String group) {

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {Card, CardHeader, Container, Modal, TextField} from "@material-ui/core";
+import {Card, CardHeader, Container, LinearProgress, Modal, TextField} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -27,27 +27,30 @@ const useStyles = makeStyles({
 const EditLabPage = ({ selectedLab }) => {
     const classes = useStyles()
     const[name,setName] = useState(selectedLab.name)
-    const[link,setLink] = useState(selectedLab.pathToFile)
-    const[file,setFile] = useState(selectedLab.pathToFile)
-    const[error,setError] = useState(selectedLab.pathToFile)
+    const[link,setLink] = useState(selectedLab.pathToFile? selectedLab.pathToFile:"")
+    const[file,setFile] = useState(null)
+    const[error,setError] = useState(null)
+    const[loading,setLoading] = useState(false)
 
 
     function updateLab() {
         var formData = new FormData()
         formData.append("name",name)
         formData.append("id",selectedLab.id)
-        if (link != ''){
-            formData.append("link",link)
-        } else if (file!=null){
+
+        if (file!=null){
             formData.append("file",file)
+        } else if (link != ''){
+            formData.append("link",link)
         } else {
             alert("Оберіть або файл, або посилання")
         }
+        setLoading(true)
         axios.patch(API_URL + 'lab/update', formData,{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}})
             .then(response =>
-                alert("Успішно")
+                setLoading(false)
 
-            ).catch(req => alert("Помилка!"+req.message))
+            ).catch(req => (setLoading(false),alert("Помилка!"+req.message)))
     }
     return (
 
@@ -76,6 +79,7 @@ const EditLabPage = ({ selectedLab }) => {
                      <Grid container direction="column" alignItems="center">
                          <Button color="primary" onClick={event => updateLab()} className={classes.root}>Завантажити</Button>
                      </Grid>
+                     {loading && <LinearProgress />}
                  </Card>
              </Container>
     );

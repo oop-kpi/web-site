@@ -1,5 +1,6 @@
 package com.oopwebsite.controller;
 
+import com.oopwebsite.controller.exceptions.BadRequestException;
 import com.oopwebsite.controller.exceptions.UserAlreadyExistsException;
 import com.oopwebsite.dto.LoginRequest;
 import com.oopwebsite.dto.SignUpRequest;
@@ -9,11 +10,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -41,7 +44,10 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User successfully signed up"),
             @ApiResponse(code = 400, message = "User already exists")})
-    public ResponseEntity<?> registerUser( @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest, BindingResult result) {
+        if (result.hasErrors()){
+            throw new BadRequestException("Password should contain at least 6 symbols");
+        }
         userService.registerUser(signUpRequest);
         return ResponseEntity.ok().body( "User successfully signed up");
     }

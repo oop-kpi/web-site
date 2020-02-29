@@ -50,6 +50,7 @@ public class LaboratoryWorkController {
                                      @RequestParam("name") String name,
                                      @RequestParam(value = "link",required = false) String link,
                                      @AuthenticationPrincipal UserWrapper user){
+        if (StringUtils.isEmpty(name)) throw new BadRequestException("Name cant be null!");
         if (!StringUtils.hasText(link)&&multipartFile==null) throw new BadRequestException("File and link is empty!");
         LaboratoryUploadWorkDto laboratoryUploadWorkDto = new LaboratoryUploadWorkDto(name,multipartFile,link,repository.findById(user.getId()).get());
         return laboratoryWorkService.saveLaboratory(laboratoryUploadWorkDto);
@@ -66,6 +67,7 @@ public class LaboratoryWorkController {
                                      @RequestParam(value = "name",required = false) String name,
                                      @RequestParam(value = "link",required = false) String link,
                                      @AuthenticationPrincipal UserWrapper user){
+        if (StringUtils.isEmpty(name)) throw new BadRequestException("Name cant be null!");
         if (!StringUtils.hasText(link)&&multipartFile==null) throw new BadRequestException("File and link is empty!");
         LaboratoryWorkUpdateDto laboratoryUploadWorkDto = new LaboratoryWorkUpdateDto(id,name,multipartFile,link);
         return laboratoryWorkService.updateLaboratory(laboratoryUploadWorkDto);
