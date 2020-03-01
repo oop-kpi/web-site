@@ -28,7 +28,15 @@ class userPageComponent extends React.Component {
         }
     }
     editLab(val){
+        if (val){
+            this.saveUserInformation();
+        }
         this.setState({edit:val})
+    }
+
+    saveUserInformation() {
+        const data = this.state.editUser;
+        axios.patch(API_URL+"user/"+this.state.user.login+'/update',data,{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => alert("Оновлено!"))
     }
     myChangeHandler = (event) => {
         this.setState({selectedLab:event});
@@ -157,6 +165,8 @@ class userPageComponent extends React.Component {
 
                                 </Grid>
                             ))}
+                            <Button variant="contained" color="primary" fullWidth style={{margin:"20px"}} onChange={event => {this.uploadLab()}}>Завантажити</Button>
+
                         </Card>: <h3>Неправильний логін!</h3> }
                     </Container>
             </Grid>
@@ -168,9 +178,16 @@ class userPageComponent extends React.Component {
     }
 
     userChangeHandler(event) {
-        let nam = event.target.name;
-        let val = event.target.value;
-        this.setState({editUser: {[nam]:[val]}})
+        let userCopy = JSON.parse(JSON.stringify(this.state.editUser))
+        //make changes to ingredients
+        userCopy[event.target.name] =  event.target.value//whatever new ingredients are
+            this.setState({
+                editUser:userCopy
+            })
+    }
+
+    uploadLab() {
+
     }
 }
 

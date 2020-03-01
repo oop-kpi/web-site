@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +33,16 @@ public class UserController {
     }
 
     @ApiOperation(value = "Update user", response = User.class)
-    @Secured("ROLE_TEACHER")
+    @PreAuthorize("@authComponentImpl.canUpdateUser(#login,#wrapper)")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved users list"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 400,message = "Wrong id")})
-    @PatchMapping("/update")
-    public User updateUserData(@RequestBody UserUpdateRequest request){
+    @PatchMapping("{login}/update")
+    public User updateUserData(@RequestBody UserUpdateRequest request,
+    @PathVariable("login") String login,
+                               @AuthenticationPrincipal UserWrapper wrapper){
+        request.setPrevLogin(login);
        return service.updateUser(request);
     }
     @GetMapping("me")
@@ -71,6 +75,17 @@ public class UserController {
             @ApiResponse(code = 400, message = "Invalid login")})
     @JsonView(View.FULL_INFORMATION.class)
     public User getByLogin(@PathVariable String login){
+         return repository.findByLogin(login).orElseThrow(()->new NoSuchElementException("Cant find user with login = "+login));
+    }
+    @PatchMapping("/{login}")
+    @ApiOperation(value = "Update user information", response = User.class)
+    @PreAuthorize("#authComponentImpl.canUpdateUser(#login,#wrapper)")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved user"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 400, message = "Invalid login")})
+    @JsonView(View.FULL_INFORMATION.class)
+    public User updateByLogin(UserUpdateRequest updateRequest,@PathVariable("login") String login,@AuthenticationPrincipal UserWrapper wrapper){
          return repository.findByLogin(login).orElseThrow(()->new NoSuchElementException("Cant find user with login = "+login));
     }
 }
