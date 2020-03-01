@@ -36,4 +36,13 @@ data class User(@JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::cla
 @Id
 @JsonView(View.FULL_INFORMATION::class,View.LABORATORY_WORK::class)
 var id: String? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (!(other is User)) return false;
+        return this.id.equals(other.id)
+    }
+
+    override fun hashCode(): Int {
+        return this.id.hashCode()
+    }
 }

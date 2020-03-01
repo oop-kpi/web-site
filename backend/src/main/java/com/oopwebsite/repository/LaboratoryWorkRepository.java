@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface LaboratoryWorkRepository extends MongoRepository<LaboratoryWork,String> {
     Optional<LaboratoryWork> findByName(String name);
+    Optional<LaboratoryWork> findById(String id);
 }

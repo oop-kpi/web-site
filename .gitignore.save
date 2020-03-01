@@ -1,7 +1,0 @@
-/backend/.idea/
-/backend/mvnw.cmd
-/backend/oopsite.iml
-.gitignore
-/backend/target/
-/backend/.mvn/
-/frontend/node_modules

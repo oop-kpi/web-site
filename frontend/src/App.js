@@ -21,6 +21,7 @@ import LabsPoolComponent from "./components/LabsPoolComponent";
 import EditLabPage from "./components/EditLabPage";
 import LeaderboardComponent from "./components/LeaderboardComponent";
 import BrowseUsersComponent from "./components/BrowseUsersComponent";
+import UserPageComponent from "./components/UserPageComponent";
 const useStyles = makeStyles(theme => ({
     root: {
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -40,9 +41,9 @@ function App() {
     const [user,setUser] = useState(null)
     const classes = useStyles();
      useEffect(()=>{
-          const user = JSON.parse(localStorage.getItem('user'))
-         if (user != null) {
-             setUser(user)
+          const userPageComponent = JSON.parse(localStorage.getItem('user'))
+         if (userPageComponent != null) {
+             setUser(userPageComponent)
          }
      },[])
   return (
@@ -68,6 +69,9 @@ function App() {
           </Route>
             <Route path="/leaderboard">
                 <LeaderboardComponent></LeaderboardComponent>
+          </Route>
+            <Route path="/user/:login">
+                <UserPageComponent></UserPageComponent>
           </Route>
           <Route path="/lectures">
           <LecturesPage></LecturesPage>
