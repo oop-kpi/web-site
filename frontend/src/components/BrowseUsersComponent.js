@@ -99,6 +99,7 @@ const tableIcons = {
 export default function BrowseUsersComponent() {
     const [selectedLab, setSelectedLecture] = useState(null);
     const [users,setUsers] = useState([])
+    let history = useHistory();
 
     const fetchData =  () => {
         axios.get(
@@ -107,7 +108,6 @@ export default function BrowseUsersComponent() {
                 search: '?err=401',
             })
         )};
-    let history = useHistory()
     useEffect(() => {
         fetchData();
     }, []);
@@ -147,7 +147,7 @@ export default function BrowseUsersComponent() {
                             {
                                 icon: LaunchIcon,
                                 tooltip: 'Подивитися інформацію про користувача',
-                                onClick: (event, rowData) => alert("You saved " + rowData.name)
+                                onClick: (event, rowData) => history.push('/user/'+rowData.login)
                             }]}
                      icons={tableIcons} title="Список студентів" columns={columns} data={users}/>
             </Card>

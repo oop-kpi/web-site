@@ -35,7 +35,9 @@ class CurrentUserPage extends React.Component {
         this.state = {
             redirectLab:null,
             selectedLab:null,
-            current:{}
+            current:{},
+            loading:false
+
         }
     }
 
@@ -50,12 +52,16 @@ class CurrentUserPage extends React.Component {
     updateLab = (lab) => {
         this.setState({redirectLab: lab})
     }
+  stopLoading = () => {
+        this.setState({loading:false})
+    }
 
 
     render() {
 
 
         function downloadLab(id) {
+        this.setState({loading:true})
         axios({
             url: API_URL + 'lab/download/' + id,
             method: 'GET',
@@ -70,6 +76,7 @@ class CurrentUserPage extends React.Component {
             link.setAttribute('download', filename);
             document.body.appendChild(link);
             link.click();
+            this.stopLoading()
         });
 
     }
