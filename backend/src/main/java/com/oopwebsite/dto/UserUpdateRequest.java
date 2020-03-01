@@ -1,28 +1,41 @@
 package com.oopwebsite.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserUpdateRequest {
-    private String id;
+    @JsonIgnore
+    private String prevLogin;
     private String name;
+    private String login;
     private String group;
     private String email;
     private String password;
     private String ball;
     private String[] roles;
 
-    public UserUpdateRequest(String name, String group, String password, String ball, String[] roles) {
+    public UserUpdateRequest(String login,String name, String group, String password, String ball, String[] roles) {
         this.name = name;
+        this.login = login;
         this.group = group;
         this.password = password;
         this.ball = ball;
         this.roles = roles;
     }
 
-    public String getId() {
-        return id;
+    public String getPrevLogin() {
+        return prevLogin;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPrevLogin(String prevLogin) {
+        this.prevLogin = prevLogin;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getEmail() {

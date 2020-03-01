@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,6 @@ public class LaboratoryWorkController {
         this.repository = repository;
         this.laboratoryWorkService = service;
     }
-
     @PostMapping("create")
     @JsonView(View.LABORATORY_WORK.class)
     @ApiOperation(value = "Create lab", response = User.class)
@@ -59,6 +59,7 @@ public class LaboratoryWorkController {
     @PatchMapping("update")
     @JsonView(View.LABORATORY_WORK.class)
     @ApiOperation(value = "Update lab", response = User.class)
+    @PreAuthorize("@authComponentImpl.canModify(#id, #user)")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully "),
             @ApiResponse(code = 401, message = "Unauthorized"),

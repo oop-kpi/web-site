@@ -72,15 +72,16 @@ public class UserServiceImpl implements UserService{
         return user;
     }
     private User mapToDao(UserUpdateRequest updateRequest){
-        User prev = userRepository.findById(updateRequest.getId()).orElseThrow(()->new NoSuchElementException("Cant find user with id = "+updateRequest.getId()));
+        User prev = userRepository.findByLogin(updateRequest.getPrevLogin()).orElseThrow(()->new NoSuchElementException("Cant find user with login = "+updateRequest.getPrevLogin()));
         User user = new User();
         Set<Role> roles = new HashSet<>();
         user.setId(prev.getId());
-        user.setLogin(prev.getLogin());
+        user.setLogin(updateRequest.getLogin());
         user.setName(updateRequest.getName() == null? prev.getName():updateRequest.getName());
         user.setEmail(updateRequest.getEmail() == null? prev.getEmail():updateRequest.getEmail());
         user.setGroup(updateRequest.getGroup() == null? prev.getGroup():Group.valueOf(updateRequest.getGroup()));
         user.setBall(updateRequest.getBall() == null? prev.getBall(): Integer.parseInt(updateRequest.getBall()));
+        user.setLaboratoryWorks(prev.getLaboratoryWorks());
         if (updateRequest.getRoles() != null) {
             for (String role : (updateRequest.getRoles())) {
                 roles.add(Role.valueOf(role));
