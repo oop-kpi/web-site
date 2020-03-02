@@ -9,22 +9,31 @@ public class LaboratoryWorkUpdateDto {
     private MultipartFile file;
     private String link;
     private String name;
-
+    private int mark;
     public String getName() {
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public LaboratoryWorkUpdateDto(String id,String name, MultipartFile file, String link) {
+    public LaboratoryWorkUpdateDto(String id,String name, MultipartFile file, String link,int mark) {
         this.id = id;
         this.name = name;
         this.file = file;
         this.link = link;
+        this.mark = mark;
     }
 
+    public int getMark() {
+        return mark;
+    }
+
+    public void setMark(int mark) {
+        this.mark = mark;
+    }
     public String getId() {
         return id;
     }

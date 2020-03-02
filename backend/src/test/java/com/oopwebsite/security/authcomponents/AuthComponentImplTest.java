@@ -54,10 +54,12 @@ public class AuthComponentImplTest {
 
         AuthComponentImpl authComponent = new AuthComponentImpl(repository,laboratoryWorkRepository);
         UserWrapper someid = new UserWrapper("someid", "", "", "", "", Collections.singleton(Role.ROLE_USER));
-        boolean lab1 = authComponent.canModify("lab1", someid);
+        boolean lab1 = authComponent.canModify("lab1", someid,0);
         UserWrapper someid2 = new UserWrapper("illegalUser", "", "", "", "", Collections.singleton(Role.ROLE_USER));
-        boolean lab2 = authComponent.canModify("lab2", someid2);
+        boolean lab2 = authComponent.canModify("lab2", someid2,15);
+        boolean lab3 = authComponent.canModify("lab1", someid,4);
         assertTrue(lab1);
         assertFalse(lab2);
+        assertFalse(lab3);
     }
 }

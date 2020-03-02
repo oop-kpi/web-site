@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {Card, CardHeader, Container, LinearProgress, Modal, TextField} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -29,15 +29,24 @@ const EditLabPage = ({ selectedLab }) => {
     const[name,setName] = useState(selectedLab.name)
     const[link,setLink] = useState(selectedLab.pathToFile? selectedLab.pathToFile:"")
     const[file,setFile] = useState(null)
+    const[user,setUser] = useState(null)
+    const[ball,setBall] = useState("")
     const[error,setError] = useState(null)
     const[loading,setLoading] = useState(false)
 
+   useEffect(()=>{
+       const userPageComponent = JSON.parse(localStorage.getItem('user'))
+       if (userPageComponent != null) {
+           setUser(userPageComponent)
+       }   },[])
 
     function updateLab() {
         var formData = new FormData()
         formData.append("name",name)
         formData.append("id",selectedLab.id)
-
+        if (ball!=''){
+            formData.append('ball',ball)
+        }
         if (file!=null){
             formData.append("file",file)
         } else if (link != ''){
@@ -62,19 +71,21 @@ const EditLabPage = ({ selectedLab }) => {
                          <Typography  variant="h5" style={{color:"red"}}>
                              При зміні будь-якого параметра оцінка буде анульована!
                          </Typography>
-                         <Typography variant="h6" component="h6">
-                             Назва :<TextField fullWidth inputProps={{style:{fontSize: 25, fontFamily:"Helvetica"}}} onChange={event => setName(event.target.value)} value={name}></TextField>
-                         </Typography>
-                         <Typography variant="h6" component="h6">
-                             Посилання: <TextField fullWidth inputProps={{style:{fontSize: 20}}} onChange={event => setLink(event.target.value)} value={link.startsWith("http")?link:""}></TextField>
-                         </Typography>
-                         <Typography variant="h6" component="h6">
-                             Файл: <TextField  type="file"
+
+                             <TextField label="Назва:" fullWidth inputProps={{style:{fontSize: 25, fontFamily:"Helvetica"}}} onChange={event => setName(event.target.value)} value={name}></TextField>
+                              <TextField label="Посилання:" fullWidth inputProps={{style:{fontSize: 20}}} onChange={event => setLink(event.target.value)} value={link.startsWith("http")?link:""}></TextField>
+                             <TextField
+                                             label="Файл:"
+                                                type="file"
                                               fullWidth
                                                onChange={(event => setFile(event.target.files[0]))}
                                                variant="outlined"
                                                margin="normal"></TextField>
-                         </Typography>
+                         { user && user.roles.includes("ROLE_TEACHER") &&
+                                 <TextField label="Бал:"fullWidth inputProps={{style: {fontSize: 20}}}
+                                                 onChange={event => setBall(event.target.value)}
+                             ></TextField>
+                         }
                      </CardContent>
                      <Grid container direction="column" alignItems="center">
                          <Button color="primary" onClick={event => updateLab()} className={classes.root}>Завантажити</Button>

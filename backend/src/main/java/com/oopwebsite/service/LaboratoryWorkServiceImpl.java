@@ -61,8 +61,11 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     public LaboratoryWork updateLaboratory(LaboratoryWorkUpdateDto laboratoryWorkUpdateDto) {
         LaboratoryWork laboratoryWork = mapToDao(laboratoryWorkUpdateDto);
         User user = laboratoryWork.getUser();
+        if (!user.getLaboratoryWorks().add(laboratoryWork)) {
+            user.getLaboratoryWorks().remove(laboratoryWork);
+            user.getLaboratoryWorks().add(laboratoryWork);
+        }
         user.setBall(updateBall(user));
-        user.getLaboratoryWorks().add(laboratoryWork);
         repository.save(laboratoryWork);
         userRepository.save(user);
         return laboratoryWork;
@@ -72,9 +75,9 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
         LaboratoryWork prev = repository.findById(updateRequest.getId()).orElseThrow(()->new NoSuchElementException("Cant find lab with id = "+updateRequest.getId()));
         LaboratoryWork lab = new LaboratoryWork();
         lab.setId(prev.getId());
+        lab.setMark(updateRequest.getMark());
         lab.setUser(prev.getUser());
         lab.setName(StringUtils.isEmpty(updateRequest.getName())? prev.getName(): updateRequest.getName());
-        lab.setMark(0);
 
         if (StringUtils.hasText(updateRequest.getLink())) {
             lab.setPathToFile(updateRequest.getLink());

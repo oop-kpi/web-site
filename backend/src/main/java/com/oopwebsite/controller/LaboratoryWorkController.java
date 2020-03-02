@@ -78,7 +78,7 @@ public class LaboratoryWorkController {
     @PatchMapping("update")
     @JsonView(View.LABORATORY_WORK.class)
     @ApiOperation(value = "Update lab", response = User.class)
-    @PreAuthorize("@authComponentImpl.canModify(#id, #user)")
+    @PreAuthorize("@authComponentImpl.canModify(#id, #user,#ball)")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully "),
             @ApiResponse(code = 401, message = "Unauthorized"),
@@ -86,10 +86,11 @@ public class LaboratoryWorkController {
     public LaboratoryWork updateLab(@RequestParam("id") String id,@RequestParam(value = "file",required = false) MultipartFile multipartFile,
                                      @RequestParam(value = "name",required = false) String name,
                                      @RequestParam(value = "link",required = false) String link,
+                                     @RequestParam(value = "ball",required = false) int ball,
                                      @AuthenticationPrincipal UserWrapper user){
         if (StringUtils.isEmpty(name)) throw new BadRequestException("Name cant be null!");
         if (!StringUtils.hasText(link)&&multipartFile==null) throw new BadRequestException("File and link is empty!");
-        LaboratoryWorkUpdateDto laboratoryUploadWorkDto = new LaboratoryWorkUpdateDto(id,name,multipartFile,link);
+        LaboratoryWorkUpdateDto laboratoryUploadWorkDto = new LaboratoryWorkUpdateDto(id,name,multipartFile,link,ball);
         return laboratoryWorkService.updateLaboratory(laboratoryUploadWorkDto);
 
     }

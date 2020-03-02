@@ -11,7 +11,7 @@ import {
 const useStyles = makeStyles(theme => ({
     root: {
         width: "100%",
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: '#e4e5d4'
     },
     fonts: {
         fontWeight: "bold"

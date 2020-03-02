@@ -20,17 +20,22 @@ public class AuthComponentImpl implements AuthComponent {
     }
 
     @Override
-    public boolean canModify(String labId, UserWrapper wrapper) {
+    public boolean canModify(String labId, UserWrapper wrapper, int ball) {
         User user = userRepository.findById(wrapper.getId()).get();
+        if(!(user.getRoles().contains(Role.ROLE_TEACHER))&& ball!=0){
+            return false;
+        }
         LaboratoryWork laboratoryWork = laboratoryWorkRepository.findById(labId).orElseThrow(() -> new NoSuchElementException("Cant find lab with id " + labId));
         if (user.getRoles().contains(Role.ROLE_TEACHER)){ return true;}
         if (laboratoryWork.getUser().equals(user)) {return true; } else {return false;}
     }
+
+
     @Override
     public boolean canUpdateUser(String login,UserWrapper wrapper) {
         User currentUser = userRepository.findById(wrapper.getId()).get();
         User user = userRepository.findByLogin(login).orElseThrow(()->new NoSuchElementException("Cant find user with login = "+login));
-        if (user.getRoles().contains(Role.ROLE_TEACHER)){ return true;}
+        if (currentUser.getRoles().contains(Role.ROLE_TEACHER)){ return true;}
         if (currentUser.equals(user)) {return true; } else {return false;}
     }
 

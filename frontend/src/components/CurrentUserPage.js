@@ -56,11 +56,7 @@ class CurrentUserPage extends React.Component {
         this.setState({loading:false})
     }
 
-
-    render() {
-
-
-        function downloadLab(id) {
+    downloadLab(id) {
         this.setState({loading:true})
         axios({
             url: API_URL + 'lab/download/' + id,
@@ -80,6 +76,8 @@ class CurrentUserPage extends React.Component {
         });
 
     }
+    render() {
+
 
     if (this.state.current == null){
             return <Redirect to="login?err=401"></Redirect>
@@ -117,7 +115,7 @@ class CurrentUserPage extends React.Component {
                                         <Comment comments={this.state.selectedLab.comments}/>
                                     </CardContent>
                                     <CardActions>  <Typography >
-                                        {this.state.selectedLab.pathToFile.startsWith("http")? "Посилання:"+this.state.selectedLab.pathToFile : <MyButton onClick={(event)=>downloadLab(this.state.selectedLab.id)}>Завантажити</MyButton>}
+                                        {this.state.selectedLab.pathToFile.startsWith("http")? "Посилання:"+this.state.selectedLab.pathToFile : <MyButton onClick={(event)=>this.downloadLab(this.state.selectedLab.id)}>Завантажити</MyButton>}
                                     </Typography></CardActions>
                                     {this.state.loading && <LinearProgress />}
                                 </Card>
