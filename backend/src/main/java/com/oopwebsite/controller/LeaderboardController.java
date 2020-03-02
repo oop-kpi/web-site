@@ -1,9 +1,6 @@
 package com.oopwebsite.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.oopwebsite.dto.LeaderboardDto;
-import com.oopwebsite.entity.User;
-import com.oopwebsite.entity.view.View;
 import com.oopwebsite.repository.UserRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

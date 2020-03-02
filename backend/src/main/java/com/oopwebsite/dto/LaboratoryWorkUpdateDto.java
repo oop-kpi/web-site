@@ -1,7 +1,6 @@
 package com.oopwebsite.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.oopwebsite.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 public class LaboratoryWorkUpdateDto {

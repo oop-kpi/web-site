@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oopwebsite.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
-
 public class LaboratoryUploadWorkDto {
     @JsonIgnore
     private MultipartFile file;

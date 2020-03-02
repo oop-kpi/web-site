@@ -1,6 +1,5 @@
 package com.oopwebsite.security.authcomponents;
 
-import com.oopwebsite.dto.UserUpdateRequest;
 import com.oopwebsite.wrappers.UserWrapper;
 
 public interface AuthComponent {

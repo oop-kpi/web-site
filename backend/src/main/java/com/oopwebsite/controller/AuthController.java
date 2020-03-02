@@ -1,7 +1,5 @@
 package com.oopwebsite.controller;
 
-import com.oopwebsite.controller.exceptions.BadRequestException;
-import com.oopwebsite.controller.exceptions.UserAlreadyExistsException;
 import com.oopwebsite.dto.LoginRequest;
 import com.oopwebsite.dto.SignUpRequest;
 import com.oopwebsite.service.UserService;

@@ -1,6 +1,5 @@
 package com.oopwebsite.dto;
 
-import com.oopwebsite.entity.User;
 
 public class LeaderboardDto  {
     private String name;
