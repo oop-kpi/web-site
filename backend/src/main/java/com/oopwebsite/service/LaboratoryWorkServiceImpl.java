@@ -13,8 +13,6 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -37,6 +35,7 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
     public User saveLaboratory(LaboratoryUploadWorkDto laboratoryUploadWorkDto) {
         LaboratoryWork laboratoryWork = new LaboratoryWork();
         laboratoryWork.setName(laboratoryUploadWorkDto.getName());
+        laboratoryWork.setMark(laboratoryUploadWorkDto.getBall());
         if (StringUtils.hasText(laboratoryUploadWorkDto.getLink())) {
             laboratoryWork.setPathToFile(laboratoryUploadWorkDto.getLink());
         }else{
@@ -53,6 +52,7 @@ public class LaboratoryWorkServiceImpl implements LaboratoryWorkService {
         laboratoryWork.setUser(owner);
         laboratoryWork = repository.insert(laboratoryWork);
         owner.getLaboratoryWorks().add(laboratoryWork);
+        owner.setBall(updateBall(owner));
         userRepository.save(owner);
         return owner;
     }

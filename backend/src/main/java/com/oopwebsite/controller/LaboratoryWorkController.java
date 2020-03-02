@@ -2,6 +2,7 @@ package com.oopwebsite.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.oopwebsite.controller.exceptions.BadRequestException;
+import com.oopwebsite.controller.exceptions.NoSuchElementException;
 import com.oopwebsite.dto.*;
 import com.oopwebsite.entity.LaboratoryWork;
 import com.oopwebsite.entity.User;
@@ -54,7 +55,25 @@ public class LaboratoryWorkController {
         if (!StringUtils.hasText(link)&&multipartFile==null) throw new BadRequestException("File and link is empty!");
         LaboratoryUploadWorkDto laboratoryUploadWorkDto = new LaboratoryUploadWorkDto(name,multipartFile,link,repository.findById(user.getId()).get());
         return laboratoryWorkService.saveLaboratory(laboratoryUploadWorkDto);
-
+    }
+    @PostMapping("create/{login}")
+    @JsonView(View.LABORATORY_WORK.class)
+    @ApiOperation(value = "Create lab", response = User.class)
+    @Secured("ROLE_TEACHER")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code=400, message = "Bad request")})
+    public User createLaboratoryWorkForUser(@RequestParam(value = "file",required = false) MultipartFile multipartFile,
+                                     @RequestParam("name") String name,
+                                     @RequestParam("mark") int mark,
+                                     @RequestParam(value = "link",required = false) String link,
+                                     @PathVariable("login") String userLogin){
+        if (StringUtils.isEmpty(name)) throw new BadRequestException("Name cant be null!");
+        if (!StringUtils.hasText(link)&&multipartFile==null) throw new BadRequestException("File and link is empty!");
+        LaboratoryUploadWorkDto laboratoryUploadWorkDto = new LaboratoryUploadWorkDto(multipartFile,link,name,mark,
+                repository.findByLogin(userLogin).orElseThrow(()-> new NoSuchElementException("Can`t find user with login  = "+userLogin)));
+        return laboratoryWorkService.saveLaboratory(laboratoryUploadWorkDto);
     }
     @PatchMapping("update")
     @JsonView(View.LABORATORY_WORK.class)

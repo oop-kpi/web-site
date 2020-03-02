@@ -10,7 +10,6 @@ public class UserUpdateRequest {
     private String group;
     private String email;
     private String password;
-    private String ball;
     private String[] roles;
 
     public UserUpdateRequest(String login,String name, String group, String password, String ball, String[] roles) {
@@ -18,7 +17,6 @@ public class UserUpdateRequest {
         this.login = login;
         this.group = group;
         this.password = password;
-        this.ball = ball;
         this.roles = roles;
     }
 
@@ -68,14 +66,6 @@ public class UserUpdateRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getBall() {
-        return ball;
-    }
-
-    public void setBall(String ball) {
-        this.ball = ball;
     }
 
     public String[] getRoles() {

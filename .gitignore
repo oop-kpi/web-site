@@ -1,0 +1,8 @@
+/backend/.idea/
+/frontend/.idea/
+/backend/demo.iml
+/frontend/node_modules/
+/.git/
+/.idea/
+./idea/workspace.xml
+/backend/target/

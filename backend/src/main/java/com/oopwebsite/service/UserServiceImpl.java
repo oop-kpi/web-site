@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService{
         user.setName(updateRequest.getName() == null? prev.getName():updateRequest.getName());
         user.setEmail(updateRequest.getEmail() == null? prev.getEmail():updateRequest.getEmail());
         user.setGroup(updateRequest.getGroup() == null? prev.getGroup():Group.valueOf(updateRequest.getGroup()));
-        user.setBall(updateRequest.getBall() == null? prev.getBall(): Integer.parseInt(updateRequest.getBall()));
+        user.setBall((prev.getBall()));
         user.setLaboratoryWorks(prev.getLaboratoryWorks());
         if (updateRequest.getRoles() != null) {
             for (String role : (updateRequest.getRoles())) {

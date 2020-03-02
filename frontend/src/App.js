@@ -22,6 +22,7 @@ import EditLabPage from "./components/EditLabPage";
 import LeaderboardComponent from "./components/LeaderboardComponent";
 import BrowseUsersComponent from "./components/BrowseUsersComponent";
 import UserPageComponent from "./components/UserPageComponent";
+import UploadLabForUserComponent from "./components/UploadLabForUserComponent";
 const useStyles = makeStyles(theme => ({
     root: {
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -70,6 +71,9 @@ function App() {
             <Route path="/leaderboard">
                 <LeaderboardComponent></LeaderboardComponent>
           </Route>
+            <Route path="/user/:login/createLab">
+            <UploadLabForUserComponent></UploadLabForUserComponent>
+        </Route>
             <Route path="/user/:login">
                 <UserPageComponent></UserPageComponent>
           </Route>

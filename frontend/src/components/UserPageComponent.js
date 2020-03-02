@@ -3,7 +3,7 @@ import axios from 'axios';
 import {API_URL} from "../constants/ApiConstants";
 import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
-import {CardHeader, Container, LinearProgress} from "@material-ui/core";
+import {CardHeader, Container, LinearProgress, ListItemText} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -14,6 +14,8 @@ import Grid from "@material-ui/core/Grid";
 import {Redirect, withRouter} from "react-router";
 import EditLabPage from "./EditLabPage";
 import TextField from "@material-ui/core/TextField";
+import {List} from "@material-ui/icons";
+import ListItem from "@material-ui/core/ListItem";
 
 class userPageComponent extends React.Component {
     constructor(props) {
@@ -134,6 +136,11 @@ class userPageComponent extends React.Component {
                                  <p>Бал</p><TextField InputProps={{
                                     readOnly: this.state.edit,
                                 }}  name="ball" value={editUser.ball} onChange={event => this.userChangeHandler(event)}></TextField>
+                                    <h4>Ролі:</h4>
+                                    {editUser.roles.map(role =>
+                                        (<li>
+                                            {role == 'ROLE_TEACHER'?"Вчитель": role =='ROLE_REVIEWER'? 'Переглядач':'Учень'}
+                                    </li>))}
 
                                     <Button style={{margin:'20px'}} variant="contained" color="primary" onClick={event => this.editLab(!(this.state.edit))}>
                                         {this.state.edit ? "Редагувати":"Зберегти" }
@@ -165,7 +172,7 @@ class userPageComponent extends React.Component {
 
                                 </Grid>
                             ))}
-                            <Button variant="contained" color="primary" fullWidth style={{margin:"20px"}} onChange={event => {this.uploadLab()}}>Завантажити</Button>
+                            <Button variant="contained" color="primary" fullWidth style={{margin:"20px"}} onClick={event => {this.uploadLab()}}>Завантажити</Button>
 
                         </Card>: <h3>Неправильний логін!</h3> }
                     </Container>
@@ -179,15 +186,14 @@ class userPageComponent extends React.Component {
 
     userChangeHandler(event) {
         let userCopy = JSON.parse(JSON.stringify(this.state.editUser))
-        //make changes to ingredients
-        userCopy[event.target.name] =  event.target.value//whatever new ingredients are
+        userCopy[event.target.name] =  event.target.value
             this.setState({
                 editUser:userCopy
             })
     }
 
     uploadLab() {
-
+        this.props.history.push("/user/"+this.state.editUser.login+"/createLab")
     }
 }
 

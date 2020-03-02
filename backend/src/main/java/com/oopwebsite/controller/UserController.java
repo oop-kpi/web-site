@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,11 +40,12 @@ public class UserController {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 400,message = "Wrong id")})
     @PatchMapping("{login}/update")
-    public User updateUserData(@RequestBody UserUpdateRequest request,
-    @PathVariable("login") String login,
-                               @AuthenticationPrincipal UserWrapper wrapper){
+    public ResponseEntity<?> updateUserData(@RequestBody UserUpdateRequest request,
+                                         @PathVariable("login") String login,
+                                         @AuthenticationPrincipal UserWrapper wrapper){
         request.setPrevLogin(login);
-       return service.updateUser(request);
+        service.updateUser(request);
+        return ResponseEntity.ok().body("Successfully!");
     }
     @GetMapping("me")
     @ApiOperation(value = "Get current user", response = User.class)

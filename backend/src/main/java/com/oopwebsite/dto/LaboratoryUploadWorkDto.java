@@ -11,7 +11,7 @@ public class LaboratoryUploadWorkDto {
     private MultipartFile file;
     private String link;
     private String name;
-
+    private int ball;
     public String getName() {
         return name;
     }
@@ -29,7 +29,21 @@ public class LaboratoryUploadWorkDto {
         this.owner = owner;
     }
 
+    public LaboratoryUploadWorkDto(MultipartFile file, String link, String name, int ball, User owner) {
+        this.file = file;
+        this.link = link;
+        this.name = name;
+        this.ball = ball;
+        this.owner = owner;
+    }
 
+    public int getBall() {
+        return ball;
+    }
+
+    public void setBall(int ball) {
+        this.ball = ball;
+    }
 
     public MultipartFile getFile() {
         return file;
