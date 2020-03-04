@@ -6,6 +6,8 @@ import com.dropbox.core.v2.files.GetTemporaryLinkResult;
 import com.dropbox.core.v2.files.Metadata;
 import com.oopwebsite.controller.exceptions.FileStorageException;
 import com.oopwebsite.dto.FileDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -13,6 +15,7 @@ import java.io.InputStream;
 @Service
 public class DropboxFileStorageImpl implements FileStorageService{
     private final DbxClientV2 client;
+    private final Logger LOGGER = LoggerFactory.getLogger(DropboxFileStorageImpl.class);
 
     public DropboxFileStorageImpl(DbxClientV2 client) {
         this.client = client;
@@ -21,6 +24,7 @@ public class DropboxFileStorageImpl implements FileStorageService{
 
     @Override
     public FileMetadata uploadFile(String filePath, InputStream file) {
+        LOGGER.info("Starting uploading file to "+filePath);
         return handleDropboxAction(() -> client.files().uploadBuilder(filePath).uploadAndFinish(file),
                 String.format("Error uploading file: %s", filePath));
 

@@ -10,9 +10,7 @@ import Container from '@material-ui/core/Container';
 import {API_URL} from "../constants/ApiConstants";
 import axios from "axios";
 import {Alert, AlertTitle} from "@material-ui/lab";
-import {TextareaAutosize} from "@material-ui/core";
 import {Redirect} from "react-router";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 function Copyright() {
@@ -88,7 +86,7 @@ export default function UploadLecture() {
                 <form className={classes.form} onSubmit={event => handle(event)}>
                     {errorMsg ?
                         <Alert severity="error">
-                            <AlertTitle>{ errorMsg}</AlertTitle>
+                            <AlertTitle>{errorMsg}</AlertTitle>
                         </Alert> : <dir></dir>
                     }
                     <div><h1>{name}</h1></div>

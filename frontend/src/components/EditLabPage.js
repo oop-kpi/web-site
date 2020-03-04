@@ -31,7 +31,6 @@ const EditLabPage = ({ selectedLab }) => {
     const[file,setFile] = useState(null)
     const[user,setUser] = useState(null)
     const[ball,setBall] = useState("")
-    const[error,setError] = useState(null)
     const[loading,setLoading] = useState(false)
 
    useEffect(()=>{

@@ -12,7 +12,8 @@ import Container from '@material-ui/core/Container';
 import axios from "axios";
 import {API_URL} from "../constants/ApiConstants";
 import { useHistory } from "react-router-dom";
-import {CardHeader, Modal} from "@material-ui/core";
+import {CardHeader, GridListTile, LinearProgress, Modal} from "@material-ui/core";
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +32,8 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: theme.spacing(8),
     },
     modal: {
-        display: 'flex',
+        maxHeight:'100vh',
+        display: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -65,10 +67,14 @@ export default function Album() {
     const [user,setUser] = useState(null)
     const [card, setCard] = useState([]);
     const [selectedLecture, setSelectedLecture] = useState(null);
+    const [url, setUrl] = useState(null);
+    const [ableToOpen, setAbleToOpen] = useState(false);
+    const [fileName, setFileName] = useState(null);
     let history = useHistory()
      useEffect(() => {
          setUser(JSON.parse(localStorage.getItem('user')));
         const fetchData =  () => {
+
             const result = axios(
                 API_URL+'lecture/getAll',{headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}}).then(resp => setCard(resp.data)).catch(err => history.push({
                     pathname: '/login',
@@ -81,42 +87,76 @@ export default function Album() {
     const classes = useStyles();
 
     function downloadPresentation(id) {
-
         axios({
             url: API_URL + 'lecture/download/' + id,
             method: 'GET',
             responseType: 'blob',
             headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
-        }).then((response) => {
-
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            let headerLine = response.headers['content-disposition']
-            let filename = headerLine.substring(21)
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', filename);
-            document.body.appendChild(link);
-            link.click();
+    }).then((response) => {
+        setAbleToOpen(true)
+        setUrl(new Blob([response.data]));
+        let headerLine = response.headers['content-disposition']
+        let filename = headerLine.substring(21)
+        setFileName(filename)
         });
+    }
+
+    function openFile() {
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(url, fileName);
+
+        }
+        else {
+            var urls = window.URL.createObjectURL(url);
+
+            if (fileName.endsWith(".pdf")){
+                window.open(urls)
+            } else {
+                var a = document.createElement('a');
+                document.body.appendChild(a);
+                a.setAttribute('style', 'display: none');
+                a.href = urls;
+                a.download = fileName;
+                a.click();
+                window.URL.revokeObjectURL(urls);
+                a.remove();
+                urls = null
+            }
+            setUrl(null)
+            setFileName(null)
+        }
+
+    }
+
+    function onModalClose() {
+        setAbleToOpen(false)
+        setUrl(null)
+        setFileName("")
+        setSelectedLecture(null)
     }
 
     return (
         <React.Fragment>
             <CssBaseline />
             <main>
-                <Container className={classes.cardGrid} maxWidth="md">
-                    {selectedLecture != null && <Modal aria-labelledby="transition-modal-title"
-                                                       aria-describedby="transition-modal-description" className={classes.modal}  open={selectedLecture} onClose={(() => {setSelectedLecture(null)})}>
-                        <Container maxWidth="md" className={classes.paper}>
+                <Container className={classes.cardGrid} maxWidth="md" >
+                    {selectedLecture != null && <Modal  aria-labelledby="transition-modal-title"
+                                                       aria-describedby="transition-modal-description" className={classes.modal}  open={selectedLecture} onClose={(() => {onModalClose()})}>
+                        <Container maxWidth="md"  className={classes.paper}>
                             <Card>
                                 <CardHeader title={selectedLecture.name}></CardHeader>
                                 <CardContent>
                                     {selectedLecture.description||"Опису не надано!"}
+                                    <CardActions>
+                                        <Button color="secondary" onClick={()=>{downloadPresentation(selectedLecture.id)}}>Завантажити</Button>
+                                        <p></p>
+                                        {!ableToOpen && <LinearProgress />}
+                                        <Button color="primary"  hidden={ableToOpen} onClick={() => {openFile()}}>{ableToOpen&&"Відкрити"}</Button>
+                                    </CardActions>
                                 </CardContent>
-                                <CardActions><Button onClick={event => downloadPresentation(selectedLecture.id)}>
-                                    Завантажити
-                                </Button></CardActions>
                             </Card>
+
+
                         </Container>
                     </Modal>
                         }
@@ -148,7 +188,6 @@ export default function Album() {
                         ))}
                     </Grid>
                           {user && user.roles.includes("ROLE_TEACHER" || "ROLE_REVIEWER")&&<Button href="/uploadLecture" fullWidth>Завантажити!</Button>}
-
                 </Container>
             </main>
         </React.Fragment>
